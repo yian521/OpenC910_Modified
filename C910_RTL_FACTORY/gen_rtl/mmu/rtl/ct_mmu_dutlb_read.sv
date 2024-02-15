@@ -15,399 +15,279 @@ limitations under the License.
 
 // &ModuleBeg; @23
 module ct_mmu_dutlb_read(
-  biu_mmu_smp_disable,
-  cp0_mach_mode,
-  cp0_mmu_icg_en,
-  cp0_mmu_mxr,
-  cp0_mmu_sum,
-  cp0_supv_mode,
-  cp0_user_mode,
-  cpurst_b,
-  dplru_clk,
-  dutlb_acc_flt_x,
-  dutlb_clk,
-  dutlb_expt_for_taken,
-  dutlb_inst_id_match_x,
-  dutlb_inst_id_older_x,
-  dutlb_miss_vld_short_x,
-  dutlb_miss_vld_x,
-  dutlb_off_hit,
-  dutlb_ori_read_x,
-  dutlb_plru_read_hit_vld_x,
-  dutlb_plru_read_hit_x,
-  dutlb_read_type_x,
-  dutlb_ref_acflt,
-  dutlb_ref_pgflt,
-  dutlb_refill_on_x,
-  dutlb_va_chg_x,
-  entry0_flg,
-  entry0_hit_x,
-  entry0_ppn,
-  entry0_vld,
-  entry10_flg,
-  entry10_hit_x,
-  entry10_ppn,
-  entry10_vld,
-  entry11_flg,
-  entry11_hit_x,
-  entry11_ppn,
-  entry11_vld,
-  entry12_flg,
-  entry12_hit_x,
-  entry12_ppn,
-  entry12_vld,
-  entry13_flg,
-  entry13_hit_x,
-  entry13_ppn,
-  entry13_vld,
-  entry14_flg,
-  entry14_hit_x,
-  entry14_ppn,
-  entry14_vld,
-  entry15_flg,
-  entry15_hit_x,
-  entry15_ppn,
-  entry15_vld,
-  entry16_flg,
-  entry16_hit_x,
-  entry16_ppn,
-  entry16_vld,
-  entry1_flg,
-  entry1_hit_x,
-  entry1_ppn,
-  entry1_vld,
-  entry2_flg,
-  entry2_hit_x,
-  entry2_ppn,
-  entry2_vld,
-  entry3_flg,
-  entry3_hit_x,
-  entry3_ppn,
-  entry3_vld,
-  entry4_flg,
-  entry4_hit_x,
-  entry4_ppn,
-  entry4_vld,
-  entry5_flg,
-  entry5_hit_x,
-  entry5_ppn,
-  entry5_vld,
-  entry6_flg,
-  entry6_hit_x,
-  entry6_ppn,
-  entry6_vld,
-  entry7_flg,
-  entry7_hit_x,
-  entry7_ppn,
-  entry7_vld,
-  entry8_flg,
-  entry8_hit_x,
-  entry8_ppn,
-  entry8_vld,
-  entry9_flg,
-  entry9_hit_x,
-  entry9_ppn,
-  entry9_vld,
-  forever_cpuclk,
-  lsu_mmu_abort_x,
-  lsu_mmu_id_x,
-  lsu_mmu_stamo_pa_x,
-  lsu_mmu_stamo_vld_x,
-  lsu_mmu_va_vld_x,
-  lsu_mmu_va_x,
-  lsu_mmu_vabuf_x,
-  mmu_lsu_access_fault_x,
-  mmu_lsu_buf_x,
-  mmu_lsu_ca_x,
-  mmu_lsu_pa_vld_x,
-  mmu_lsu_pa_x,
-  mmu_lsu_page_fault_x,
-  mmu_lsu_sec_x,
-  mmu_lsu_sh_x,
-  mmu_lsu_so_x,
-  mmu_lsu_stall_x,
-  mmu_pmp_pa_x,
-  mmu_sysmap_pa_x,
-  pad_yy_icg_scan_en,
-  pmp_mmu_flg_x,
-  refill_id_flop,
-  sysmap_mmu_flg_x,
-  utlb_req_vpn_x
+input    logic            biu_mmu_smp_disable,      
+input    logic            cp0_mach_mode,            
+input    logic            cp0_mmu_icg_en,          
+input    logic            cp0_mmu_mxr,              
+input    logic            cp0_mmu_sum,             
+input    logic            cp0_supv_mode,            
+input    logic            cp0_user_mode,           
+input    logic            cpurst_b,                 
+input    logic            dplru_clk,                
+input    logic            dutlb_clk,                
+input    logic            dutlb_expt_for_taken,     
+input    logic            dutlb_off_hit,            
+input    logic            dutlb_ori_read_x,         
+input    logic            dutlb_read_type_x,        
+input    logic            dutlb_ref_acflt,          
+input    logic            dutlb_ref_pgflt,          
+input    logic            dutlb_refill_on_x,        
+input    logic    [13:0]  entry0_flg,               
+input    logic            entry0_hit_x,             
+input    logic    [27:0]  entry0_ppn,               
+input    logic            entry0_vld,               
+input    logic    [13:0]  entry10_flg,              
+input    logic            entry10_hit_x,            
+input    logic    [27:0]  entry10_ppn,              
+input    logic            entry10_vld,              
+input    logic    [13:0]  entry11_flg,              
+input    logic            entry11_hit_x,            
+input    logic    [27:0]  entry11_ppn,              
+input    logic            entry11_vld,              
+input    logic    [13:0]  entry12_flg,              
+input    logic            entry12_hit_x,            
+input    logic    [27:0]  entry12_ppn,              
+input    logic            entry12_vld,              
+input    logic    [13:0]  entry13_flg,              
+input    logic            entry13_hit_x,            
+input    logic    [27:0]  entry13_ppn,              
+input    logic            entry13_vld,              
+input    logic    [13:0]  entry14_flg,              
+input    logic            entry14_hit_x,            
+input    logic    [27:0]  entry14_ppn,              
+input    logic            entry14_vld,              
+input    logic    [13:0]  entry15_flg,              
+input    logic            entry15_hit_x,            
+input    logic    [27:0]  entry15_ppn,              
+input    logic            entry15_vld,              
+input    logic    [13:0]  entry16_flg,              
+input    logic            entry16_hit_x,            
+input    logic    [27:0]  entry16_ppn,              
+input    logic            entry16_vld,              
+input    logic    [13:0]  entry1_flg,               
+input    logic            entry1_hit_x,             
+input    logic    [27:0]  entry1_ppn,               
+input    logic            entry1_vld,               
+input    logic    [13:0]  entry2_flg,               
+input    logic            entry2_hit_x,             
+input    logic    [27:0]  entry2_ppn,               
+input    logic            entry2_vld,               
+input    logic    [13:0]  entry3_flg,               
+input    logic            entry3_hit_x,             
+input    logic    [27:0]  entry3_ppn,               
+input    logic            entry3_vld,               
+input    logic    [13:0]  entry4_flg,               
+input    logic            entry4_hit_x,             
+input    logic    [27:0]  entry4_ppn,               
+input    logic            entry4_vld,               
+input    logic    [13:0]  entry5_flg,               
+input    logic            entry5_hit_x,             
+input    logic    [27:0]  entry5_ppn,               
+input    logic            entry5_vld,               
+input    logic    [13:0]  entry6_flg,               
+input    logic            entry6_hit_x,             
+input    logic    [27:0]  entry6_ppn,               
+input    logic            entry6_vld,               
+input    logic    [13:0]  entry7_flg,               
+input    logic            entry7_hit_x,             
+input    logic    [27:0]  entry7_ppn,               
+input    logic            entry7_vld,               
+input    logic    [13:0]  entry8_flg,               
+input    logic            entry8_hit_x,             
+input    logic    [27:0]  entry8_ppn,               
+input    logic            entry8_vld,               
+input    logic    [13:0]  entry9_flg,               
+input    logic            entry9_hit_x,             
+input    logic    [27:0]  entry9_ppn,               
+input    logic            entry9_vld,               
+input    logic            forever_cpuclk,           
+input    logic            lsu_mmu_abort_x,          
+input    logic    [6 :0]  lsu_mmu_id_x,             
+input    logic    [27:0]  lsu_mmu_stamo_pa_x,       
+input    logic            lsu_mmu_stamo_vld_x,      
+input    logic            lsu_mmu_va_vld_x,         
+input    logic    [63:0]  lsu_mmu_va_x,             
+input    logic    [27:0]  lsu_mmu_vabuf_x,          
+input    logic            pad_yy_icg_scan_en,       
+input    logic    [3 :0]  pmp_mmu_flg_x,            
+input    logic    [6 :0]  refill_id_flop,           
+input    logic    [4 :0]  sysmap_mmu_flg_x,         
+output   logic            dutlb_acc_flt_x,          
+output   logic            dutlb_inst_id_match_x,    
+output   logic            dutlb_inst_id_older_x,    
+output   logic            dutlb_miss_vld_short_x,   
+output   logic            dutlb_miss_vld_x,         
+output   logic            dutlb_plru_read_hit_vld_x, 
+output   logic    [15:0]  dutlb_plru_read_hit_x,    
+output   logic            dutlb_va_chg_x,           
+output   logic            mmu_lsu_access_fault_x,   
+output   logic            mmu_lsu_buf_x,            
+output   logic            mmu_lsu_ca_x,             
+output   logic            mmu_lsu_pa_vld_x,         
+output   logic    [27:0]  mmu_lsu_pa_x,             
+output   logic            mmu_lsu_page_fault_x,     
+output   logic            mmu_lsu_sec_x,            
+output   logic            mmu_lsu_sh_x,             
+output   logic            mmu_lsu_so_x,             
+output   logic            mmu_lsu_stall_x,          
+output   logic    [27:0]  mmu_pmp_pa_x,             
+output   logic    [27:0]  mmu_sysmap_pa_x,          
+output   logic    [26:0]  utlb_req_vpn_x           
 );
 
-// &Ports; @24
-input           biu_mmu_smp_disable;      
-input           cp0_mach_mode;            
-input           cp0_mmu_icg_en;           
-input           cp0_mmu_mxr;              
-input           cp0_mmu_sum;              
-input           cp0_supv_mode;            
-input           cp0_user_mode;            
-input           cpurst_b;                 
-input           dplru_clk;                
-input           dutlb_clk;                
-input           dutlb_expt_for_taken;     
-input           dutlb_off_hit;            
-input           dutlb_ori_read_x;         
-input           dutlb_read_type_x;        
-input           dutlb_ref_acflt;          
-input           dutlb_ref_pgflt;          
-input           dutlb_refill_on_x;        
-input   [13:0]  entry0_flg;               
-input           entry0_hit_x;             
-input   [27:0]  entry0_ppn;               
-input           entry0_vld;               
-input   [13:0]  entry10_flg;              
-input           entry10_hit_x;            
-input   [27:0]  entry10_ppn;              
-input           entry10_vld;              
-input   [13:0]  entry11_flg;              
-input           entry11_hit_x;            
-input   [27:0]  entry11_ppn;              
-input           entry11_vld;              
-input   [13:0]  entry12_flg;              
-input           entry12_hit_x;            
-input   [27:0]  entry12_ppn;              
-input           entry12_vld;              
-input   [13:0]  entry13_flg;              
-input           entry13_hit_x;            
-input   [27:0]  entry13_ppn;              
-input           entry13_vld;              
-input   [13:0]  entry14_flg;              
-input           entry14_hit_x;            
-input   [27:0]  entry14_ppn;              
-input           entry14_vld;              
-input   [13:0]  entry15_flg;              
-input           entry15_hit_x;            
-input   [27:0]  entry15_ppn;              
-input           entry15_vld;              
-input   [13:0]  entry16_flg;              
-input           entry16_hit_x;            
-input   [27:0]  entry16_ppn;              
-input           entry16_vld;              
-input   [13:0]  entry1_flg;               
-input           entry1_hit_x;             
-input   [27:0]  entry1_ppn;               
-input           entry1_vld;               
-input   [13:0]  entry2_flg;               
-input           entry2_hit_x;             
-input   [27:0]  entry2_ppn;               
-input           entry2_vld;               
-input   [13:0]  entry3_flg;               
-input           entry3_hit_x;             
-input   [27:0]  entry3_ppn;               
-input           entry3_vld;               
-input   [13:0]  entry4_flg;               
-input           entry4_hit_x;             
-input   [27:0]  entry4_ppn;               
-input           entry4_vld;               
-input   [13:0]  entry5_flg;               
-input           entry5_hit_x;             
-input   [27:0]  entry5_ppn;               
-input           entry5_vld;               
-input   [13:0]  entry6_flg;               
-input           entry6_hit_x;             
-input   [27:0]  entry6_ppn;               
-input           entry6_vld;               
-input   [13:0]  entry7_flg;               
-input           entry7_hit_x;             
-input   [27:0]  entry7_ppn;               
-input           entry7_vld;               
-input   [13:0]  entry8_flg;               
-input           entry8_hit_x;             
-input   [27:0]  entry8_ppn;               
-input           entry8_vld;               
-input   [13:0]  entry9_flg;               
-input           entry9_hit_x;             
-input   [27:0]  entry9_ppn;               
-input           entry9_vld;               
-input           forever_cpuclk;           
-input           lsu_mmu_abort_x;          
-input   [6 :0]  lsu_mmu_id_x;             
-input   [27:0]  lsu_mmu_stamo_pa_x;       
-input           lsu_mmu_stamo_vld_x;      
-input           lsu_mmu_va_vld_x;         
-input   [63:0]  lsu_mmu_va_x;             
-input   [27:0]  lsu_mmu_vabuf_x;          
-input           pad_yy_icg_scan_en;       
-input   [3 :0]  pmp_mmu_flg_x;            
-input   [6 :0]  refill_id_flop;           
-input   [4 :0]  sysmap_mmu_flg_x;         
-output          dutlb_acc_flt_x;          
-output          dutlb_inst_id_match_x;    
-output          dutlb_inst_id_older_x;    
-output          dutlb_miss_vld_short_x;   
-output          dutlb_miss_vld_x;         
-output          dutlb_plru_read_hit_vld_x; 
-output  [15:0]  dutlb_plru_read_hit_x;    
-output          dutlb_va_chg_x;           
-output          mmu_lsu_access_fault_x;   
-output          mmu_lsu_buf_x;            
-output          mmu_lsu_ca_x;             
-output          mmu_lsu_pa_vld_x;         
-output  [27:0]  mmu_lsu_pa_x;             
-output          mmu_lsu_page_fault_x;     
-output          mmu_lsu_sec_x;            
-output          mmu_lsu_sh_x;             
-output          mmu_lsu_so_x;             
-output          mmu_lsu_stall_x;          
-output  [27:0]  mmu_pmp_pa_x;             
-output  [27:0]  mmu_sysmap_pa_x;          
-output  [26:0]  utlb_req_vpn_x;           
 
-// &Regs; @25
 reg     [13:0]  dutlb_entry_flg;          
 reg     [27:0]  dutlb_entry_pa;           
 reg     [27:0]  dutlb_pa_buf;             
-reg     [15:0]  dutlb_plru_read_hit_x;    
+//reg     [15:0]  dutlb_plru_read_hit_x;    
 reg             jtlb_acc_fault_flop;      
 reg             pmp_flg_vld;              
 reg             pmp_read_type;            
 
 // &Wires; @26
-wire            biu_mmu_smp_disable;      
-wire            cp0_mach_mode;            
-wire            cp0_mmu_icg_en;           
-wire            cp0_mmu_mxr;              
-wire            cp0_mmu_sum;              
-wire            cp0_supv_mode;            
-wire            cp0_user_mode;            
-wire            cpurst_b;                 
-wire            dplru_clk;                
-wire            dutlb_acc_flt_x;          
+//wire            biu_mmu_smp_disable;      
+//wire            cp0_mach_mode;            
+//wire            cp0_mmu_icg_en;           
+//wire            cp0_mmu_mxr;              
+//wire            cp0_mmu_sum;              
+//wire            cp0_supv_mode;            
+//wire            cp0_user_mode;            
+//wire            cpurst_b;                 
+//wire            dplru_clk;                
+//wire            dutlb_acc_flt_x;          
 wire            dutlb_addr_hit;           
-wire            dutlb_clk;                
+//wire            dutlb_clk;                
 wire            dutlb_disable_vld;        
 wire    [16:0]  dutlb_entry_hit;          
 wire            dutlb_entry_hit_vld;      
-wire            dutlb_expt_for_taken;     
+//wire            dutlb_expt_for_taken;     
 wire            dutlb_expt_match;         
 wire    [13:0]  dutlb_fin_flg;            
 wire    [27:0]  dutlb_fin_pa;             
 wire    [2 :0]  dutlb_fin_pgs;            
 wire            dutlb_hit_vld;            
 wire            dutlb_inst_id_hit;        
-wire            dutlb_inst_id_match_x;    
-wire            dutlb_inst_id_older_x;    
-wire            dutlb_miss_vld_short_x;   
-wire            dutlb_miss_vld_x;         
+//wire            dutlb_inst_id_match_x;    
+//wire            dutlb_inst_id_older_x;    
+//wire            dutlb_miss_vld_short_x;   
+//wire            dutlb_miss_vld_x;         
 wire    [13:0]  dutlb_off_flg;            
-wire            dutlb_off_hit;            
+//wire            dutlb_off_hit;            
 wire    [27:0]  dutlb_off_pa;             
 wire    [2 :0]  dutlb_off_pgs;            
-wire            dutlb_ori_read_x;         
+//wire            dutlb_ori_read_x;         
 wire            dutlb_page_fault;         
-wire            dutlb_plru_read_hit_vld_x; 
+//wire            dutlb_plru_read_hit_vld_x; 
 wire            dutlb_pmp_chk_vld;        
 wire    [13:0]  dutlb_pre_flg;            
 wire    [27:0]  dutlb_pre_pa;             
 wire    [2 :0]  dutlb_pre_pgs;            
 wire            dutlb_pre_sel;            
-wire            dutlb_read_type_x;        
-wire            dutlb_ref_acflt;          
-wire            dutlb_ref_pgflt;          
-wire            dutlb_refill_on_x;        
+//wire            dutlb_read_type_x;        
+//wire            dutlb_ref_acflt;          
+//wire            dutlb_ref_pgflt;          
+//wire            dutlb_refill_on_x;        
 wire            dutlb_req_id_older;       
-wire            dutlb_va_chg_x;           
+//wire            dutlb_va_chg_x;           
 wire            dutlb_va_illegal;         
-wire    [13:0]  entry0_flg;               
-wire            entry0_hit_x;             
-wire    [27:0]  entry0_ppn;               
-wire            entry0_vld;               
-wire    [13:0]  entry10_flg;              
-wire            entry10_hit_x;            
-wire    [27:0]  entry10_ppn;              
-wire            entry10_vld;              
-wire    [13:0]  entry11_flg;              
-wire            entry11_hit_x;            
-wire    [27:0]  entry11_ppn;              
-wire            entry11_vld;              
-wire    [13:0]  entry12_flg;              
-wire            entry12_hit_x;            
-wire    [27:0]  entry12_ppn;              
-wire            entry12_vld;              
-wire    [13:0]  entry13_flg;              
-wire            entry13_hit_x;            
-wire    [27:0]  entry13_ppn;              
-wire            entry13_vld;              
-wire    [13:0]  entry14_flg;              
-wire            entry14_hit_x;            
-wire    [27:0]  entry14_ppn;              
-wire            entry14_vld;              
-wire    [13:0]  entry15_flg;              
-wire            entry15_hit_x;            
-wire    [27:0]  entry15_ppn;              
-wire            entry15_vld;              
-wire    [13:0]  entry16_flg;              
-wire            entry16_hit_x;            
-wire    [27:0]  entry16_ppn;              
-wire            entry16_vld;              
-wire    [13:0]  entry1_flg;               
-wire            entry1_hit_x;             
-wire    [27:0]  entry1_ppn;               
-wire            entry1_vld;               
-wire    [13:0]  entry2_flg;               
-wire            entry2_hit_x;             
-wire    [27:0]  entry2_ppn;               
-wire            entry2_vld;               
-wire    [13:0]  entry3_flg;               
-wire            entry3_hit_x;             
-wire    [27:0]  entry3_ppn;               
-wire            entry3_vld;               
-wire    [13:0]  entry4_flg;               
-wire            entry4_hit_x;             
-wire    [27:0]  entry4_ppn;               
-wire            entry4_vld;               
-wire    [13:0]  entry5_flg;               
-wire            entry5_hit_x;             
-wire    [27:0]  entry5_ppn;               
-wire            entry5_vld;               
-wire    [13:0]  entry6_flg;               
-wire            entry6_hit_x;             
-wire    [27:0]  entry6_ppn;               
-wire            entry6_vld;               
-wire    [13:0]  entry7_flg;               
-wire            entry7_hit_x;             
-wire    [27:0]  entry7_ppn;               
-wire            entry7_vld;               
-wire    [13:0]  entry8_flg;               
-wire            entry8_hit_x;             
-wire    [27:0]  entry8_ppn;               
-wire            entry8_vld;               
-wire    [13:0]  entry9_flg;               
-wire            entry9_hit_x;             
-wire    [27:0]  entry9_ppn;               
-wire            entry9_vld;               
-wire            forever_cpuclk;           
+//wire    [13:0]  entry0_flg;               
+//wire            entry0_hit_x;             
+//wire    [27:0]  entry0_ppn;               
+//wire            entry0_vld;               
+//wire    [13:0]  entry10_flg;              
+//wire            entry10_hit_x;            
+//wire    [27:0]  entry10_ppn;              
+//wire            entry10_vld;              
+//wire    [13:0]  entry11_flg;              
+//wire            entry11_hit_x;            
+//wire    [27:0]  entry11_ppn;              
+//wire            entry11_vld;              
+//wire    [13:0]  entry12_flg;              
+//wire            entry12_hit_x;            
+//wire    [27:0]  entry12_ppn;              
+//wire            entry12_vld;              
+//wire    [13:0]  entry13_flg;              
+//wire            entry13_hit_x;            
+//wire    [27:0]  entry13_ppn;              
+//wire            entry13_vld;              
+//wire    [13:0]  entry14_flg;              
+//wire            entry14_hit_x;            
+//wire    [27:0]  entry14_ppn;              
+//wire            entry14_vld;              
+//wire    [13:0]  entry15_flg;              
+//wire            entry15_hit_x;            
+//wire    [27:0]  entry15_ppn;              
+//wire            entry15_vld;              
+//wire    [13:0]  entry16_flg;              
+//wire            entry16_hit_x;            
+//wire    [27:0]  entry16_ppn;              
+//wire            entry16_vld;              
+//wire    [13:0]  entry1_flg;               
+//wire            entry1_hit_x;             
+//wire    [27:0]  entry1_ppn;               
+//wire            entry1_vld;               
+//wire    [13:0]  entry2_flg;               
+//wire            entry2_hit_x;             
+//wire    [27:0]  entry2_ppn;               
+//wire            entry2_vld;               
+//wire    [13:0]  entry3_flg;               
+//wire            entry3_hit_x;             
+//wire    [27:0]  entry3_ppn;               
+//wire            entry3_vld;               
+//wire    [13:0]  entry4_flg;               
+//wire            entry4_hit_x;             
+//wire    [27:0]  entry4_ppn;               
+//wire            entry4_vld;               
+//wire    [13:0]  entry5_flg;               
+//wire            entry5_hit_x;             
+//wire    [27:0]  entry5_ppn;               
+//wire            entry5_vld;               
+//wire    [13:0]  entry6_flg;               
+//wire            entry6_hit_x;             
+//wire    [27:0]  entry6_ppn;               
+//wire            entry6_vld;               
+//wire    [13:0]  entry7_flg;               
+//wire            entry7_hit_x;             
+//wire    [27:0]  entry7_ppn;               
+//wire            entry7_vld;               
+//wire    [13:0]  entry8_flg;               
+//wire            entry8_hit_x;             
+//wire    [27:0]  entry8_ppn;               
+//wire            entry8_vld;               
+//wire    [13:0]  entry9_flg;               
+//wire            entry9_hit_x;             
+//wire    [27:0]  entry9_ppn;               
+//wire            entry9_vld;               
+//wire            forever_cpuclk;           
 wire            jtlb_acc_fault;           
-wire            lsu_mmu_abort_x;          
-wire    [6 :0]  lsu_mmu_id_x;             
-wire    [27:0]  lsu_mmu_stamo_pa_x;       
-wire            lsu_mmu_stamo_vld_x;      
-wire            lsu_mmu_va_vld_x;         
-wire    [63:0]  lsu_mmu_va_x;             
+//wire            lsu_mmu_abort_x;          
+//wire    [6 :0]  lsu_mmu_id_x;             
+//wire    [27:0]  lsu_mmu_stamo_pa_x;       
+//wire            lsu_mmu_stamo_vld_x;      
+//wire            lsu_mmu_va_vld_x;         
+//wire    [63:0]  lsu_mmu_va_x;             
 wire            lsu_va_chg;               
-wire            mmu_lsu_access_fault_x;   
-wire            mmu_lsu_buf_x;            
-wire            mmu_lsu_ca_x;             
-wire            mmu_lsu_pa_vld_x;         
-wire    [27:0]  mmu_lsu_pa_x;             
-wire            mmu_lsu_page_fault_x;     
+//wire            mmu_lsu_access_fault_x;   
+//wire            mmu_lsu_buf_x;            
+//wire            mmu_lsu_ca_x;             
+//wire            mmu_lsu_pa_vld_x;         
+//wire    [27:0]  mmu_lsu_pa_x;             
+//wire            mmu_lsu_page_fault_x;     
 wire    [2 :0]  mmu_lsu_page_size_x;      
-wire            mmu_lsu_sec_x;            
-wire            mmu_lsu_sh_x;             
-wire            mmu_lsu_so_x;             
-wire            mmu_lsu_stall_x;          
-wire    [27:0]  mmu_pmp_pa_x;             
-wire    [27:0]  mmu_sysmap_pa_x;          
+//wire            mmu_lsu_sec_x;            
+//wire            mmu_lsu_sh_x;             
+//wire            mmu_lsu_so_x;             
+//wire            mmu_lsu_stall_x;          
+//wire    [27:0]  mmu_pmp_pa_x;             
+//wire    [27:0]  mmu_sysmap_pa_x;          
 wire    [17:0]  pa_offset;                
 wire            pabuf_clk;                
 wire            pabuf_clk_en;             
-wire            pad_yy_icg_scan_en;       
-wire    [3 :0]  pmp_mmu_flg_x;            
-wire    [6 :0]  refill_id_flop;           
-wire    [4 :0]  sysmap_mmu_flg_x;         
-wire    [26:0]  utlb_req_vpn_x;           
+//wire            pad_yy_icg_scan_en;       
+//wire    [3 :0]  pmp_mmu_flg_x;            
+//wire    [6 :0]  refill_id_flop;           
+//wire    [4 :0]  sysmap_mmu_flg_x;         
+//wire    [26:0]  utlb_req_vpn_x;           
 wire    [16:0]  vpn_hit;                  
 wire    [16:0]  vpn_vld;                  
 
@@ -500,7 +380,7 @@ assign mmu_lsu_access_fault_x = jtlb_acc_fault_flop
 assign dutlb_acc_flt_x = jtlb_acc_fault_flop;
 
 
-always @(posedge dplru_clk or negedge cpurst_b)
+always_ff @(posedge dplru_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     dutlb_plru_read_hit_x[15:0] <= 16'b0;
@@ -576,23 +456,7 @@ assign dutlb_addr_hit     = |dutlb_entry_hit[16:0];
 //                  Selecting Info from uTLB
 //----------------------------------------------------------
 // &CombBeg; @185
-always @( entry4_ppn[27:0]
-       or entry1_ppn[27:0]
-       or entry8_ppn[27:0]
-       or dutlb_entry_hit[15:0]
-       or entry13_ppn[27:0]
-       or entry7_ppn[27:0]
-       or entry10_ppn[27:0]
-       or entry11_ppn[27:0]
-       or entry0_ppn[27:0]
-       or entry2_ppn[27:0]
-       or entry3_ppn[27:0]
-       or entry6_ppn[27:0]
-       or entry5_ppn[27:0]
-       or entry14_ppn[27:0]
-       or entry15_ppn[27:0]
-       or entry9_ppn[27:0]
-       or entry12_ppn[27:0])
+always_comb
 begin
 case(dutlb_entry_hit[15:0])
 16'b0000000000000001: dutlb_entry_pa[PPN_WIDTH-1:0] =  entry0_ppn[PPN_WIDTH-1:0];
@@ -616,23 +480,7 @@ endcase
 // &CombEnd; @205
 end
 // &CombBeg; @206
-always @( entry5_flg[13:0]
-       or entry2_flg[13:0]
-       or dutlb_entry_hit[15:0]
-       or entry9_flg[13:0]
-       or entry14_flg[13:0]
-       or entry12_flg[13:0]
-       or entry13_flg[13:0]
-       or entry6_flg[13:0]
-       or entry1_flg[13:0]
-       or entry10_flg[13:0]
-       or entry11_flg[13:0]
-       or entry7_flg[13:0]
-       or entry15_flg[13:0]
-       or entry0_flg[13:0]
-       or entry4_flg[13:0]
-       or entry3_flg[13:0]
-       or entry8_flg[13:0])
+always_comb
 begin
 case(dutlb_entry_hit[15:0])
 16'b0000000000000001: dutlb_entry_flg[FLG_WIDTH-1:0] =  entry0_flg[FLG_WIDTH-1:0];
@@ -697,7 +545,7 @@ assign dutlb_fin_pgs[PGS_WIDTH-1:0] =
 // to cut off the timing from dutlb abort to access fault
 assign jtlb_acc_fault = dutlb_ref_acflt && dutlb_refill_on_x && dutlb_inst_id_match_x; 
 
-always @(posedge dutlb_clk or negedge cpurst_b)
+always_ff @(posedge dutlb_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     jtlb_acc_fault_flop <= 1'b0;
@@ -742,7 +590,7 @@ gated_clk_cell  x_dutlb_pabuf_gateclk (
 assign dutlb_pmp_chk_vld = (dutlb_hit_vld || dutlb_disable_vld)
                         && !dutlb_page_fault;
 
-always @(posedge pabuf_clk or negedge cpurst_b)
+always_ff @(posedge pabuf_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     pmp_flg_vld <= 1'b0;
@@ -753,7 +601,7 @@ begin
 end
 //assign pmp_flg_vld = 1'b1;
 
-always @(posedge pabuf_clk or negedge cpurst_b)
+always_ff @(posedge pabuf_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     pmp_read_type <= 1'b0;
@@ -761,7 +609,7 @@ begin
     pmp_read_type <= dutlb_read_type_x;
 end
 
-always @(posedge pabuf_clk)
+always_ff @(posedge pabuf_clk)
 begin
   if(dutlb_pmp_chk_vld)
     dutlb_pa_buf[PPN_WIDTH-1:0] <= dutlb_fin_pa[PPN_WIDTH-1:0];

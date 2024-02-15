@@ -15,215 +15,115 @@ limitations under the License.
 
 // &ModuleBeg; @26
 module ct_mmu_jtlb(
-  arb_jtlb_acc_type,
-  arb_jtlb_bank_sel,
-  arb_jtlb_cmp_with_va,
-  arb_jtlb_data_din,
-  arb_jtlb_fifo_din,
-  arb_jtlb_fifo_write,
-  arb_jtlb_idx,
-  arb_jtlb_req,
-  arb_jtlb_tag_din,
-  arb_jtlb_vpn,
-  arb_jtlb_write,
-  arb_top_cur_st,
-  cp0_mmu_icg_en,
-  cp0_mmu_maee,
-  cp0_mmu_mpp,
-  cp0_mmu_mprv,
-  cp0_mmu_mxr,
-  cp0_mmu_ptw_en,
-  cp0_mmu_sum,
-  cp0_yy_priv_mode,
-  cpurst_b,
-  dutlb_xx_mmu_off,
-  forever_cpuclk,
-  jtlb_arb_cmp_va,
-  jtlb_arb_par_clr,
-  jtlb_arb_pfu_cmplt,
-  jtlb_arb_pfu_vpn,
-  jtlb_arb_sel_1g,
-  jtlb_arb_sel_2m,
-  jtlb_arb_sel_4k,
-  jtlb_arb_tc_miss,
-  jtlb_arb_type,
-  jtlb_arb_vpn,
-  jtlb_dutlb_acc_err,
-  jtlb_dutlb_pgflt,
-  jtlb_dutlb_ref_cmplt,
-  jtlb_dutlb_ref_pavld,
-  jtlb_iutlb_acc_err,
-  jtlb_iutlb_pgflt,
-  jtlb_iutlb_ref_cmplt,
-  jtlb_iutlb_ref_pavld,
-  jtlb_ptw_req,
-  jtlb_ptw_type,
-  jtlb_ptw_vpn,
-  jtlb_regs_hit,
-  jtlb_regs_hit_mult,
-  jtlb_regs_tlbp_hit_index,
-  jtlb_tlboper_asid_hit,
-  jtlb_tlboper_cmplt,
-  jtlb_tlboper_fifo,
-  jtlb_tlboper_read_idle,
-  jtlb_tlboper_sel,
-  jtlb_tlboper_va_hit,
-  jtlb_tlbr_asid,
-  jtlb_tlbr_flg,
-  jtlb_tlbr_g,
-  jtlb_tlbr_pgs,
-  jtlb_tlbr_ppn,
-  jtlb_tlbr_vpn,
-  jtlb_top_cur_st,
-  jtlb_top_utlb_pavld,
-  jtlb_utlb_ref_flg,
-  jtlb_utlb_ref_pgs,
-  jtlb_utlb_ref_ppn,
-  jtlb_utlb_ref_vpn,
-  jtlb_xx_fifo,
-  jtlb_xx_tc_read,
-  lsu_mmu_va2,
-  lsu_mmu_va2_vld,
-  mmu_lsu_pa2,
-  mmu_lsu_pa2_err,
-  mmu_lsu_pa2_vld,
-  mmu_lsu_sec2,
-  mmu_lsu_share2,
-  mmu_pmp_pa4,
-  mmu_sysmap_pa4,
-  pad_yy_icg_scan_en,
-  pmp_mmu_flg4,
-  ptw_arb_vpn,
-  ptw_jtlb_dmiss,
-  ptw_jtlb_imiss,
-  ptw_jtlb_pmiss,
-  ptw_jtlb_ref_acc_err,
-  ptw_jtlb_ref_cmplt,
-  ptw_jtlb_ref_data_vld,
-  ptw_jtlb_ref_flg,
-  ptw_jtlb_ref_pgflt,
-  ptw_jtlb_ref_pgs,
-  ptw_jtlb_ref_ppn,
-  regs_jtlb_cur_asid,
-  sysmap_mmu_flg4,
-  tlboper_jtlb_asid,
-  tlboper_jtlb_asid_sel,
-  tlboper_jtlb_cmp_noasid,
-  tlboper_jtlb_inv_asid,
-  tlboper_jtlb_tlbwr_on,
-  tlboper_xx_pgs,
-  tlboper_xx_pgs_en
+
+    input    logic    [2  :0]  arb_jtlb_acc_type,       
+    input    logic    [3  :0]  arb_jtlb_bank_sel,       
+    input    logic             arb_jtlb_cmp_with_va,    
+    input    logic    [41 :0]  arb_jtlb_data_din,       
+    input    logic    [3  :0]  arb_jtlb_fifo_din,       
+    input    logic             arb_jtlb_fifo_write,     
+    input    logic    [8  :0]  arb_jtlb_idx,            
+    input    logic             arb_jtlb_req,            
+    input    logic    [47 :0]  arb_jtlb_tag_din,        
+    input    logic    [26 :0]  arb_jtlb_vpn,            
+    input    logic             arb_jtlb_write,          
+    input    logic    [1  :0]  arb_top_cur_st,          
+    input    logic             cp0_mmu_icg_en,          
+    input    logic             cp0_mmu_maee,            
+    input    logic    [1  :0]  cp0_mmu_mpp,             
+    input    logic             cp0_mmu_mprv,            
+    input    logic             cp0_mmu_mxr,             
+    input    logic             cp0_mmu_ptw_en,          
+    input    logic             cp0_mmu_sum,             
+    input    logic    [1  :0]  cp0_yy_priv_mode,        
+    input    logic             cpurst_b,                
+    input    logic             dutlb_xx_mmu_off,        
+    input    logic             forever_cpuclk,          
+    input    logic    [27 :0]  lsu_mmu_va2,             
+    input    logic             lsu_mmu_va2_vld,         
+    input    logic             pad_yy_icg_scan_en,      
+    input    logic    [3  :0]  pmp_mmu_flg4,            
+    input    logic    [26 :0]  ptw_arb_vpn,             
+    input    logic             ptw_jtlb_dmiss,          
+    input    logic             ptw_jtlb_imiss,          
+    input    logic             ptw_jtlb_pmiss,          
+    input    logic             ptw_jtlb_ref_acc_err,    
+    input    logic             ptw_jtlb_ref_cmplt,      
+    input    logic             ptw_jtlb_ref_data_vld,   
+    input    logic    [13 :0]  ptw_jtlb_ref_flg,        
+    input    logic             ptw_jtlb_ref_pgflt,      
+    input    logic    [2  :0]  ptw_jtlb_ref_pgs,        
+    input    logic    [27 :0]  ptw_jtlb_ref_ppn,        
+    input    logic    [15 :0]  regs_jtlb_cur_asid,      
+    input    logic    [4  :0]  sysmap_mmu_flg4,         
+    input    logic    [15 :0]  tlboper_jtlb_asid,       
+    input    logic             tlboper_jtlb_asid_sel,   
+    input    logic             tlboper_jtlb_cmp_noasid, 
+    input    logic    [15 :0]  tlboper_jtlb_inv_asid,   
+    input    logic             tlboper_jtlb_tlbwr_on,   
+    input    logic    [2  :0]  tlboper_xx_pgs,          
+    input    logic             tlboper_xx_pgs_en,       
+    output   logic             jtlb_arb_cmp_va,         
+    output   logic             jtlb_arb_par_clr,        
+    output   logic             jtlb_arb_pfu_cmplt,      
+    output   logic    [26 :0]  jtlb_arb_pfu_vpn,        
+    output   logic             jtlb_arb_sel_1g,         
+    output   logic             jtlb_arb_sel_2m,         
+    output   logic             jtlb_arb_sel_4k,         
+    output   logic             jtlb_arb_tc_miss,        
+    output   logic    [2  :0]  jtlb_arb_type,           
+    output   logic    [26 :0]  jtlb_arb_vpn,            
+    output   logic             jtlb_dutlb_acc_err,      
+    output   logic             jtlb_dutlb_pgflt,        
+    output   logic             jtlb_dutlb_ref_cmplt,    
+    output   logic             jtlb_dutlb_ref_pavld,    
+    output   logic             jtlb_iutlb_acc_err,      
+    output   logic             jtlb_iutlb_pgflt,        
+    output   logic             jtlb_iutlb_ref_cmplt,    
+    output   logic             jtlb_iutlb_ref_pavld,    
+    output   logic             jtlb_ptw_req,            
+    output   logic    [2  :0]  jtlb_ptw_type,           
+    output   logic    [26 :0]  jtlb_ptw_vpn,            
+    output   logic             jtlb_regs_hit,           
+    output   logic             jtlb_regs_hit_mult,      
+    output   logic    [10 :0]  jtlb_regs_tlbp_hit_index, 
+    output   logic             jtlb_tlboper_asid_hit,   
+    output   logic             jtlb_tlboper_cmplt,      
+    output   logic    [3  :0]  jtlb_tlboper_fifo,       
+    output   logic             jtlb_tlboper_read_idle,  
+    output   logic    [3  :0]  jtlb_tlboper_sel,        
+    output   logic             jtlb_tlboper_va_hit,     
+    output   logic    [15 :0]  jtlb_tlbr_asid,          
+    output   logic    [13 :0]  jtlb_tlbr_flg,           
+    output   logic             jtlb_tlbr_g,             
+    output   logic    [2  :0]  jtlb_tlbr_pgs,           
+    output   logic    [27 :0]  jtlb_tlbr_ppn,           
+    output   logic    [26 :0]  jtlb_tlbr_vpn,           
+    output   logic    [1  :0]  jtlb_top_cur_st,         
+    output   logic             jtlb_top_utlb_pavld,     
+    output   logic    [13 :0]  jtlb_utlb_ref_flg,       
+    output   logic    [2  :0]  jtlb_utlb_ref_pgs,       
+    output   logic    [27 :0]  jtlb_utlb_ref_ppn,       
+    output   logic    [26 :0]  jtlb_utlb_ref_vpn,       
+    output   logic    [11 :0]  jtlb_xx_fifo,            
+    output   logic             jtlb_xx_tc_read,         
+    output   logic    [27 :0]  mmu_lsu_pa2,             
+    output   logic             mmu_lsu_pa2_err,         
+    output   logic             mmu_lsu_pa2_vld,         
+    output   logic             mmu_lsu_sec2,            
+    output   logic             mmu_lsu_share2,          
+    output   logic    [27 :0]  mmu_pmp_pa4,             
+    output   logic    [27 :0]  mmu_sysmap_pa4          
 );
-
-// &Ports; @27
-input   [2  :0]  arb_jtlb_acc_type;       
-input   [3  :0]  arb_jtlb_bank_sel;       
-input            arb_jtlb_cmp_with_va;    
-input   [41 :0]  arb_jtlb_data_din;       
-input   [3  :0]  arb_jtlb_fifo_din;       
-input            arb_jtlb_fifo_write;     
-input   [8  :0]  arb_jtlb_idx;            
-input            arb_jtlb_req;            
-input   [47 :0]  arb_jtlb_tag_din;        
-input   [26 :0]  arb_jtlb_vpn;            
-input            arb_jtlb_write;          
-input   [1  :0]  arb_top_cur_st;          
-input            cp0_mmu_icg_en;          
-input            cp0_mmu_maee;            
-input   [1  :0]  cp0_mmu_mpp;             
-input            cp0_mmu_mprv;            
-input            cp0_mmu_mxr;             
-input            cp0_mmu_ptw_en;          
-input            cp0_mmu_sum;             
-input   [1  :0]  cp0_yy_priv_mode;        
-input            cpurst_b;                
-input            dutlb_xx_mmu_off;        
-input            forever_cpuclk;          
-input   [27 :0]  lsu_mmu_va2;             
-input            lsu_mmu_va2_vld;         
-input            pad_yy_icg_scan_en;      
-input   [3  :0]  pmp_mmu_flg4;            
-input   [26 :0]  ptw_arb_vpn;             
-input            ptw_jtlb_dmiss;          
-input            ptw_jtlb_imiss;          
-input            ptw_jtlb_pmiss;          
-input            ptw_jtlb_ref_acc_err;    
-input            ptw_jtlb_ref_cmplt;      
-input            ptw_jtlb_ref_data_vld;   
-input   [13 :0]  ptw_jtlb_ref_flg;        
-input            ptw_jtlb_ref_pgflt;      
-input   [2  :0]  ptw_jtlb_ref_pgs;        
-input   [27 :0]  ptw_jtlb_ref_ppn;        
-input   [15 :0]  regs_jtlb_cur_asid;      
-input   [4  :0]  sysmap_mmu_flg4;         
-input   [15 :0]  tlboper_jtlb_asid;       
-input            tlboper_jtlb_asid_sel;   
-input            tlboper_jtlb_cmp_noasid; 
-input   [15 :0]  tlboper_jtlb_inv_asid;   
-input            tlboper_jtlb_tlbwr_on;   
-input   [2  :0]  tlboper_xx_pgs;          
-input            tlboper_xx_pgs_en;       
-output           jtlb_arb_cmp_va;         
-output           jtlb_arb_par_clr;        
-output           jtlb_arb_pfu_cmplt;      
-output  [26 :0]  jtlb_arb_pfu_vpn;        
-output           jtlb_arb_sel_1g;         
-output           jtlb_arb_sel_2m;         
-output           jtlb_arb_sel_4k;         
-output           jtlb_arb_tc_miss;        
-output  [2  :0]  jtlb_arb_type;           
-output  [26 :0]  jtlb_arb_vpn;            
-output           jtlb_dutlb_acc_err;      
-output           jtlb_dutlb_pgflt;        
-output           jtlb_dutlb_ref_cmplt;    
-output           jtlb_dutlb_ref_pavld;    
-output           jtlb_iutlb_acc_err;      
-output           jtlb_iutlb_pgflt;        
-output           jtlb_iutlb_ref_cmplt;    
-output           jtlb_iutlb_ref_pavld;    
-output           jtlb_ptw_req;            
-output  [2  :0]  jtlb_ptw_type;           
-output  [26 :0]  jtlb_ptw_vpn;            
-output           jtlb_regs_hit;           
-output           jtlb_regs_hit_mult;      
-output  [10 :0]  jtlb_regs_tlbp_hit_index; 
-output           jtlb_tlboper_asid_hit;   
-output           jtlb_tlboper_cmplt;      
-output  [3  :0]  jtlb_tlboper_fifo;       
-output           jtlb_tlboper_read_idle;  
-output  [3  :0]  jtlb_tlboper_sel;        
-output           jtlb_tlboper_va_hit;     
-output  [15 :0]  jtlb_tlbr_asid;          
-output  [13 :0]  jtlb_tlbr_flg;           
-output           jtlb_tlbr_g;             
-output  [2  :0]  jtlb_tlbr_pgs;           
-output  [27 :0]  jtlb_tlbr_ppn;           
-output  [26 :0]  jtlb_tlbr_vpn;           
-output  [1  :0]  jtlb_top_cur_st;         
-output           jtlb_top_utlb_pavld;     
-output  [13 :0]  jtlb_utlb_ref_flg;       
-output  [2  :0]  jtlb_utlb_ref_pgs;       
-output  [27 :0]  jtlb_utlb_ref_ppn;       
-output  [26 :0]  jtlb_utlb_ref_vpn;       
-output  [11 :0]  jtlb_xx_fifo;            
-output           jtlb_xx_tc_read;         
-output  [27 :0]  mmu_lsu_pa2;             
-output           mmu_lsu_pa2_err;         
-output           mmu_lsu_pa2_vld;         
-output           mmu_lsu_sec2;            
-output           mmu_lsu_share2;          
-output  [27 :0]  mmu_pmp_pa4;             
-output  [27 :0]  mmu_sysmap_pa4;          
-
 // &Regs; @28
-reg     [1  :0]  pfu_cur_st;              
-reg     [1  :0]  pfu_nxt_st;              
+//reg     [1  :0]  pfu_cur_st;              
+//reg     [1  :0]  pfu_nxt_st;              
 reg              pfu_off_chk;             
 reg     [27 :0]  pfu_pa_buf;              
 reg              pfu_sec_buf;             
 reg              pfu_share_buf;           
-reg     [2  :0]  read_cur_st;             
-reg     [2  :0]  read_nxt_st;             
+//reg     [2  :0]  read_cur_st;             
+//reg     [2  :0]  read_nxt_st;             
 reg     [2  :0]  ta_acc_type;             
 reg              ta_cmp_va;               
 reg     [11 :0]  ta_jtlb_fifo_upd;        
@@ -288,44 +188,44 @@ reg     [3  :0]  tc_way_sel;
 reg              tc_wen;                  
 
 // &Wires; @29
-wire    [2  :0]  arb_jtlb_acc_type;       
-wire    [3  :0]  arb_jtlb_bank_sel;       
-wire             arb_jtlb_cmp_with_va;    
-wire    [41 :0]  arb_jtlb_data_din;       
-wire    [3  :0]  arb_jtlb_fifo_din;       
-wire             arb_jtlb_fifo_write;     
-wire    [8  :0]  arb_jtlb_idx;            
-wire             arb_jtlb_req;            
-wire    [47 :0]  arb_jtlb_tag_din;        
-wire    [26 :0]  arb_jtlb_vpn;            
-wire             arb_jtlb_write;          
-wire    [1  :0]  arb_top_cur_st;          
+//wire    [2  :0]  arb_jtlb_acc_type;       
+//wire    [3  :0]  arb_jtlb_bank_sel;       
+//wire             arb_jtlb_cmp_with_va;    
+//wire    [41 :0]  arb_jtlb_data_din;       
+//wire    [3  :0]  arb_jtlb_fifo_din;       
+//wire             arb_jtlb_fifo_write;     
+//wire    [8  :0]  arb_jtlb_idx;            
+//wire             arb_jtlb_req;            
+//wire    [47 :0]  arb_jtlb_tag_din;        
+//wire    [26 :0]  arb_jtlb_vpn;            
+//wire             arb_jtlb_write;          
+//wire    [1  :0]  arb_top_cur_st;          
 wire    [15 :0]  asid_for_va_hit;         
 wire             cp0_mach_mode;           
-wire             cp0_mmu_icg_en;          
-wire             cp0_mmu_maee;            
-wire    [1  :0]  cp0_mmu_mpp;             
-wire             cp0_mmu_mprv;            
-wire             cp0_mmu_mxr;             
-wire             cp0_mmu_ptw_en;          
-wire             cp0_mmu_sum;             
+//wire             cp0_mmu_icg_en;          
+//wire             cp0_mmu_maee;            
+//wire    [1  :0]  cp0_mmu_mpp;             
+//wire             cp0_mmu_mprv;            
+//wire             cp0_mmu_mxr;             
+//wire             cp0_mmu_ptw_en;          
+//wire             cp0_mmu_sum;             
 wire    [1  :0]  cp0_priv_mode;           
 wire             cp0_supv_mode;           
 wire             cp0_user_mode;           
-wire    [1  :0]  cp0_yy_priv_mode;        
-wire             cpurst_b;                
-wire             dutlb_xx_mmu_off;        
-wire             forever_cpuclk;          
-wire             jtlb_arb_cmp_va;         
-wire             jtlb_arb_par_clr;        
-wire             jtlb_arb_pfu_cmplt;      
-wire    [26 :0]  jtlb_arb_pfu_vpn;        
-wire             jtlb_arb_sel_1g;         
-wire             jtlb_arb_sel_2m;         
-wire             jtlb_arb_sel_4k;         
-wire             jtlb_arb_tc_miss;        
-wire    [2  :0]  jtlb_arb_type;           
-wire    [26 :0]  jtlb_arb_vpn;            
+//wire    [1  :0]  cp0_yy_priv_mode;        
+//wire             cpurst_b;                
+//wire             dutlb_xx_mmu_off;        
+//wire             forever_cpuclk;          
+//wire             jtlb_arb_cmp_va;         
+//wire             jtlb_arb_par_clr;        
+//wire             jtlb_arb_pfu_cmplt;      
+//wire    [26 :0]  jtlb_arb_pfu_vpn;        
+//wire             jtlb_arb_sel_1g;         
+//wire             jtlb_arb_sel_2m;         
+//wire             jtlb_arb_sel_4k;         
+//wire             jtlb_arb_tc_miss;        
+//wire    [2  :0]  jtlb_arb_type;           
+//wire    [26 :0]  jtlb_arb_vpn;            
 wire             jtlb_clk;                
 wire             jtlb_clk_en;             
 wire    [2  :0]  jtlb_cur_pgs;            
@@ -336,14 +236,14 @@ wire    [83 :0]  jtlb_data_dout0;
 wire    [83 :0]  jtlb_data_dout1;         
 wire    [7  :0]  jtlb_data_idx;           
 wire    [3  :0]  jtlb_data_wen;           
-wire             jtlb_dutlb_acc_err;      
-wire             jtlb_dutlb_pgflt;        
-wire             jtlb_dutlb_ref_cmplt;    
-wire             jtlb_dutlb_ref_pavld;    
-wire             jtlb_iutlb_acc_err;      
-wire             jtlb_iutlb_pgflt;        
-wire             jtlb_iutlb_ref_cmplt;    
-wire             jtlb_iutlb_ref_pavld;    
+//wire             jtlb_dutlb_acc_err;      
+//wire             jtlb_dutlb_pgflt;        
+//wire             jtlb_dutlb_ref_cmplt;    
+//wire             jtlb_dutlb_ref_pavld;    
+//wire             jtlb_iutlb_acc_err;      
+//wire             jtlb_iutlb_pgflt;        
+//wire             jtlb_iutlb_ref_cmplt;    
+//wire             jtlb_iutlb_ref_pavld;    
 wire             jtlb_pfu_acc_fault;      
 wire             jtlb_pfu_cmplt;          
 wire             jtlb_pfu_deny;           
@@ -351,63 +251,63 @@ wire             jtlb_pfu_flag_fault;
 wire    [27 :0]  jtlb_pfu_pa;             
 wire             jtlb_pfu_sec;            
 wire             jtlb_pfu_share;          
-wire             jtlb_ptw_req;            
-wire    [2  :0]  jtlb_ptw_type;           
-wire    [26 :0]  jtlb_ptw_vpn;            
-wire             jtlb_regs_hit;           
-wire             jtlb_regs_hit_mult;      
-wire    [10 :0]  jtlb_regs_tlbp_hit_index; 
+//wire             jtlb_ptw_req;            
+//wire    [2  :0]  jtlb_ptw_type;           
+//wire    [26 :0]  jtlb_ptw_vpn;            
+//wire             jtlb_regs_hit;           
+//wire             jtlb_regs_hit_mult;      
+//wire    [10 :0]  jtlb_regs_tlbp_hit_index; 
 wire             jtlb_tag_cen;            
 wire    [195:0]  jtlb_tag_din;            
 wire    [195:0]  jtlb_tag_dout;           
 wire    [7  :0]  jtlb_tag_idx;            
 wire    [4  :0]  jtlb_tag_wen;            
-wire             jtlb_tlboper_asid_hit;   
-wire             jtlb_tlboper_cmplt;      
-wire    [3  :0]  jtlb_tlboper_fifo;       
-wire             jtlb_tlboper_read_idle;  
-wire    [3  :0]  jtlb_tlboper_sel;        
-wire             jtlb_tlboper_va_hit;     
-wire    [15 :0]  jtlb_tlbr_asid;          
-wire    [13 :0]  jtlb_tlbr_flg;           
-wire             jtlb_tlbr_g;             
-wire    [2  :0]  jtlb_tlbr_pgs;           
-wire    [27 :0]  jtlb_tlbr_ppn;           
-wire    [26 :0]  jtlb_tlbr_vpn;           
-wire    [1  :0]  jtlb_top_cur_st;         
-wire             jtlb_top_utlb_pavld;     
-wire    [13 :0]  jtlb_utlb_ref_flg;       
-wire    [2  :0]  jtlb_utlb_ref_pgs;       
-wire    [27 :0]  jtlb_utlb_ref_ppn;       
-wire    [26 :0]  jtlb_utlb_ref_vpn;       
-wire    [11 :0]  jtlb_xx_fifo;            
-wire             jtlb_xx_tc_read;         
-wire    [27 :0]  lsu_mmu_va2;             
-wire             lsu_mmu_va2_vld;         
-wire    [27 :0]  mmu_lsu_pa2;             
-wire             mmu_lsu_pa2_err;         
-wire             mmu_lsu_pa2_vld;         
-wire             mmu_lsu_sec2;            
-wire             mmu_lsu_share2;          
-wire    [27 :0]  mmu_pmp_pa4;             
-wire    [27 :0]  mmu_sysmap_pa4;          
+//wire             jtlb_tlboper_asid_hit;   
+//wire             jtlb_tlboper_cmplt;      
+//wire    [3  :0]  jtlb_tlboper_fifo;       
+//wire             jtlb_tlboper_read_idle;  
+//wire    [3  :0]  jtlb_tlboper_sel;        
+//wire             jtlb_tlboper_va_hit;     
+//wire    [15 :0]  jtlb_tlbr_asid;          
+//wire    [13 :0]  jtlb_tlbr_flg;           
+//wire             jtlb_tlbr_g;             
+//wire    [2  :0]  jtlb_tlbr_pgs;           
+//wire    [27 :0]  jtlb_tlbr_ppn;           
+//wire    [26 :0]  jtlb_tlbr_vpn;           
+//wire    [1  :0]  jtlb_top_cur_st;         
+//wire             jtlb_top_utlb_pavld;     
+//wire    [13 :0]  jtlb_utlb_ref_flg;       
+//wire    [2  :0]  jtlb_utlb_ref_pgs;       
+//wire    [27 :0]  jtlb_utlb_ref_ppn;       
+//wire    [26 :0]  jtlb_utlb_ref_vpn;       
+//wire    [11 :0]  jtlb_xx_fifo;            
+//wire             jtlb_xx_tc_read;         
+//wire    [27 :0]  lsu_mmu_va2;             
+//wire             lsu_mmu_va2_vld;         
+//wire    [27 :0]  mmu_lsu_pa2;             
+//wire             mmu_lsu_pa2_err;         
+//wire             mmu_lsu_pa2_vld;         
+//wire             mmu_lsu_sec2;            
+//wire             mmu_lsu_share2;          
+//wire    [27 :0]  mmu_pmp_pa4;             
+//wire    [27 :0]  mmu_sysmap_pa4;          
 wire    [26 :0]  pa_offset;               
-wire             pad_yy_icg_scan_en;      
+//wire             pad_yy_icg_scan_en;      
 wire             pfu_deny_st;             
 wire             pfu_idle_st;             
 wire             pfu_ok_st;               
-wire    [3  :0]  pmp_mmu_flg4;            
-wire    [26 :0]  ptw_arb_vpn;             
-wire             ptw_jtlb_dmiss;          
-wire             ptw_jtlb_imiss;          
-wire             ptw_jtlb_pmiss;          
-wire             ptw_jtlb_ref_acc_err;    
-wire             ptw_jtlb_ref_cmplt;      
-wire             ptw_jtlb_ref_data_vld;   
-wire    [13 :0]  ptw_jtlb_ref_flg;        
-wire             ptw_jtlb_ref_pgflt;      
-wire    [2  :0]  ptw_jtlb_ref_pgs;        
-wire    [27 :0]  ptw_jtlb_ref_ppn;        
+//wire    [3  :0]  pmp_mmu_flg4;            
+//wire    [26 :0]  ptw_arb_vpn;             
+//wire             ptw_jtlb_dmiss;          
+//wire             ptw_jtlb_imiss;          
+//wire             ptw_jtlb_pmiss;          
+//wire             ptw_jtlb_ref_acc_err;    
+//wire             ptw_jtlb_ref_cmplt;      
+//wire             ptw_jtlb_ref_data_vld;   
+//wire    [13 :0]  ptw_jtlb_ref_flg;        
+//wire             ptw_jtlb_ref_pgflt;      
+//wire    [2  :0]  ptw_jtlb_ref_pgs;        
+//wire    [27 :0]  ptw_jtlb_ref_ppn;        
 wire    [27 :0]  ptw_pa2;                 
 wire             read_cur_1g;             
 wire             read_cur_2m;             
@@ -419,8 +319,8 @@ wire    [13 :0]  ref_flg;
 wire    [2  :0]  ref_pgs;                 
 wire    [27 :0]  ref_ppn;                 
 wire    [26 :0]  ref_vpn;                 
-wire    [15 :0]  regs_jtlb_cur_asid;      
-wire    [4  :0]  sysmap_mmu_flg4;         
+///wire    [15 :0]  regs_jtlb_cur_asid;      
+//wire    [4  :0]  sysmap_mmu_flg4;         
 wire    [3  :0]  ta_idx_sel;              
 wire    [3  :0]  ta_jtlb_fifo;            
 wire    [41 :0]  ta_jtlb_way0_data;       
@@ -508,13 +408,13 @@ wire             tc_way2_hit;
 wire             tc_way2_sel;             
 wire             tc_way3_hit;             
 wire             tc_way3_sel;             
-wire    [15 :0]  tlboper_jtlb_asid;       
-wire             tlboper_jtlb_asid_sel;   
-wire             tlboper_jtlb_cmp_noasid; 
-wire    [15 :0]  tlboper_jtlb_inv_asid;   
-wire             tlboper_jtlb_tlbwr_on;   
-wire    [2  :0]  tlboper_xx_pgs;          
-wire             tlboper_xx_pgs_en;       
+//wire    [15 :0]  tlboper_jtlb_asid;       
+//wire             tlboper_jtlb_asid_sel;   
+//wire             tlboper_jtlb_cmp_noasid; 
+//wire    [15 :0]  tlboper_jtlb_inv_asid;   
+//wire             tlboper_jtlb_tlbwr_on;   
+//wire    [2  :0]  tlboper_xx_pgs;          
+//wire             tlboper_xx_pgs_en;       
 
 
 parameter VPN_WIDTH  = 39-12;  // VPN
@@ -640,7 +540,7 @@ ct_mmu_jtlb_data_array  x_ct_mmu_jtlb_data_array (
 //==========================================================
 //                  TA Valid
 //==========================================================
-always @(posedge jtlb_clk or negedge cpurst_b)
+always_ff @(posedge jtlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     ta_vld <= 1'b0;
@@ -653,7 +553,7 @@ end
 //==========================================================
 //                  Other Control Signal
 //==========================================================
-always @(posedge jtlb_clk or negedge cpurst_b)
+always_ff @(posedge jtlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
   begin
@@ -768,7 +668,7 @@ assign ta_idx_sel[3:0]  = ta_way_sel[3:0] & {4{!ta_cmp_va}};
 //==========================================================
 //                  TC Valid
 //==========================================================
-always @(posedge jtlb_clk or negedge cpurst_b)
+always_ff @(posedge jtlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     tc_vld <= 1'b0;
@@ -785,7 +685,7 @@ end
 // &CombEnd; @403
 assign tc_par_fail = 1'b0;
 
-always @(posedge jtlb_clk or negedge cpurst_b)
+always_ff @(posedge jtlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
   begin
@@ -807,7 +707,7 @@ begin
   end
 end
 
-always @(posedge jtlb_clk or negedge cpurst_b)
+always_ff @(posedge jtlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
   begin
@@ -829,7 +729,7 @@ begin
   end
 end
 
-always @(posedge jtlb_clk or negedge cpurst_b)
+always_ff @(posedge jtlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
   begin
@@ -851,7 +751,7 @@ begin
   end
 end
 
-always @(posedge jtlb_clk or negedge cpurst_b)
+always_ff @(posedge jtlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
   begin
@@ -886,11 +786,7 @@ assign tc_way0_hit = tc_way0_hit_kid0 && tc_way0_hit_kid1 && tc_way0_hit_kid2
                  && (tc_way0_hit_kid3 && tc_way0_hit_kid4 || tc_way0_hit_kid5);
 
 // &CombBeg; @523
-always @( ta_jtlb_fifo[3:0]
-       or tc_jtlb_fifo[11:0]
-       or read_cur_2m
-       or read_cur_4k
-       or read_cur_1g)
+always_comb
 begin
 case({read_cur_1g, read_cur_2m, read_cur_4k})
   3'b001:  ta_jtlb_fifo_upd[11:0] = {tc_jtlb_fifo[11:4], ta_jtlb_fifo[3:0]};
@@ -901,7 +797,7 @@ endcase
 // &CombEnd; @530
 end
 
-always @(posedge jtlb_clk or negedge cpurst_b)
+always_ff @(posedge jtlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
   begin
@@ -935,7 +831,7 @@ assign jtlb_xx_fifo[11:0] = tc_jtlb_fifo[11:0];
 //==========================================================
 //                  PFN & Flag
 //==========================================================
-always @(posedge jtlb_clk or negedge cpurst_b)
+always_ff @(posedge jtlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
   begin
@@ -957,7 +853,7 @@ begin
   end
 end
 
-always @(posedge jtlb_clk or negedge cpurst_b)
+always_ff @(posedge jtlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
   begin
@@ -979,7 +875,7 @@ begin
   end
 end
 
-always @(posedge jtlb_clk or negedge cpurst_b)
+always_ff @(posedge jtlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
   begin
@@ -1001,7 +897,7 @@ begin
   end
 end
 
-always @(posedge jtlb_clk or negedge cpurst_b)
+always_ff @(posedge jtlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
   begin
@@ -1033,14 +929,14 @@ end
 //==========================================================
 //                  Read FSM
 //==========================================================
-parameter READ_IDLE    = 3'b000,
-          READ_4K      = 3'b001,
-          READ_4K_FAIL = 3'b101,
-          READ_2M      = 3'b010,
-          READ_2M_FAIL = 3'b110,
-          READ_1G      = 3'b011;
+enum logic[2:0]{READ_IDLE    = 3'b000,
+                READ_4K      = 3'b001,
+                READ_4K_FAIL = 3'b101,
+                READ_2M      = 3'b010,
+                READ_2M_FAIL = 3'b110,
+                READ_1G      = 3'b011}read_cur_st,read_nxt_st;
 
-always @(posedge jtlb_clk or negedge cpurst_b)
+always_ff @(posedge jtlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     read_cur_st[2:0] <= READ_IDLE;
@@ -1049,13 +945,7 @@ begin
 end 
 
 // &CombBeg; @679
-always @( read_cur_st
-       or arb_jtlb_cmp_with_va
-       or tc_vld
-       or tc_cmp_va
-       or tc_par_fail
-       or tc_tlb_miss
-       or arb_jtlb_acc_type[2:0])
+always_comb
 begin
 case (read_cur_st)
   READ_IDLE:
@@ -1278,12 +1168,12 @@ assign jtlb_dutlb_acc_err   = ptw_jtlb_ref_acc_err
 //==========================================================
 //                  Read FSM
 //==========================================================
-parameter PFU_IDLE = 2'b00,
-          PFU_CHK  = 2'b01,
-          PFU_DENY = 2'b10,
-          PFU_OK   = 2'b11;
+enum logic[1:0] {PFU_IDLE = 2'b00,
+                 PFU_CHK  = 2'b01,
+                 PFU_DENY = 2'b10,
+                 PFU_OK   = 2'b11}pfu_cur_st,pfu_nxt_st;
 
-always @(posedge jtlb_clk or negedge cpurst_b)
+always_ff @(posedge jtlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     pfu_cur_st[1:0] <= PFU_IDLE;
@@ -1292,10 +1182,7 @@ begin
 end 
 
 // &CombBeg; @918
-always @( jtlb_pfu_acc_fault
-       or jtlb_pfu_cmplt
-       or jtlb_pfu_deny
-       or pfu_cur_st[1:0])
+always_comb
 begin
 case (pfu_cur_st[1:0])
   PFU_IDLE:
@@ -1331,7 +1218,7 @@ endcase
 // &CombEnd; @950
 end
 
-always @(posedge jtlb_clk or negedge cpurst_b)
+always_ff @(posedge jtlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     pfu_off_chk <= 1'b0;
@@ -1386,7 +1273,7 @@ assign jtlb_pfu_sec               = (dutlb_xx_mmu_off || !cp0_mmu_maee) ? sysmap
 assign jtlb_pfu_share             = (dutlb_xx_mmu_off || !cp0_mmu_maee) ? sysmap_mmu_flg4[1] : ref_flg[10];
 
 // flop pa for pmp check
-always @(posedge jtlb_clk or negedge cpurst_b)
+always_ff @(posedge jtlb_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
   begin

@@ -15,98 +15,51 @@ limitations under the License.
 
 // &ModuleBeg; @27
 module ct_mmu_iutlb(
-  arb_iutlb_grant,
-  cp0_mmu_icg_en,
-  cp0_mmu_no_op_req,
-  cp0_mmu_sum,
-  cp0_yy_priv_mode,
-  cpurst_b,
-  forever_cpuclk,
-  hpcp_mmu_cnt_en,
-  ifu_mmu_abort,
-  ifu_mmu_va,
-  ifu_mmu_va_vld,
-  iutlb_arb_cmplt,
-  iutlb_arb_req,
-  iutlb_arb_vpn,
-  iutlb_ptw_wfc,
-  iutlb_top_ref_cur_st,
-  iutlb_top_scd_updt,
-  jtlb_iutlb_acc_err,
-  jtlb_iutlb_pgflt,
-  jtlb_iutlb_ref_cmplt,
-  jtlb_iutlb_ref_pavld,
-  jtlb_utlb_ref_flg,
-  jtlb_utlb_ref_pgs,
-  jtlb_utlb_ref_ppn,
-  jtlb_utlb_ref_vpn,
-  lsu_mmu_tlb_va,
-  mmu_hpcp_iutlb_miss,
-  mmu_ifu_buf,
-  mmu_ifu_ca,
-  mmu_ifu_deny,
-  mmu_ifu_pa,
-  mmu_ifu_pavld,
-  mmu_ifu_pgflt,
-  mmu_ifu_sec,
-  mmu_pmp_pa2,
-  mmu_sysmap_pa2,
-  pad_yy_icg_scan_en,
-  pmp_mmu_flg2,
-  regs_mmu_en,
-  regs_utlb_clr,
-  sysmap_mmu_flg2,
-  tlboper_utlb_clr,
-  tlboper_utlb_inv_va_req,
-  utlb_clk
+    input   logic          arb_iutlb_grant,        
+    input   logic          cp0_mmu_icg_en,         
+    input   logic          cp0_mmu_no_op_req,      
+    input   logic          cp0_mmu_sum,            
+    input   logic  [1 :0]  cp0_yy_priv_mode,       
+    input   logic          cpurst_b,               
+    input   logic          forever_cpuclk,         
+    input   logic          hpcp_mmu_cnt_en,        
+    input   logic          ifu_mmu_abort,          
+    input   logic  [62:0]  ifu_mmu_va,             
+    input   logic          ifu_mmu_va_vld,         
+    input   logic          jtlb_iutlb_acc_err,     
+    input   logic          jtlb_iutlb_pgflt,       
+    input   logic          jtlb_iutlb_ref_cmplt,   
+    input   logic          jtlb_iutlb_ref_pavld,   
+    input   logic  [13:0]  jtlb_utlb_ref_flg,      
+    input   logic  [2 :0]  jtlb_utlb_ref_pgs,      
+    input   logic  [27:0]  jtlb_utlb_ref_ppn,      
+    input   logic  [26:0]  jtlb_utlb_ref_vpn,      
+    input   logic  [26:0]  lsu_mmu_tlb_va,         
+    input   logic          pad_yy_icg_scan_en,     
+    input   logic  [3 :0]  pmp_mmu_flg2,           
+    input   logic          regs_mmu_en,            
+    input   logic          regs_utlb_clr,          
+    input   logic  [4 :0]  sysmap_mmu_flg2,        
+    input   logic          tlboper_utlb_clr,       
+    input   logic          tlboper_utlb_inv_va_req, 
+    input   logic          utlb_clk,               
+    output  logic          iutlb_arb_cmplt,        
+    output  logic          iutlb_arb_req,          
+    output  logic  [26:0]  iutlb_arb_vpn,          
+    output  logic          iutlb_ptw_wfc,          
+    output  logic  [1 :0]  iutlb_top_ref_cur_st,   
+    output  logic          iutlb_top_scd_updt,     
+    output  logic          mmu_hpcp_iutlb_miss,    
+    output  logic          mmu_ifu_buf,            
+    output  logic          mmu_ifu_ca,             
+    output  logic          mmu_ifu_deny,           
+    output  logic  [27:0]  mmu_ifu_pa,             
+    output  logic          mmu_ifu_pavld,          
+    output  logic          mmu_ifu_pgflt,          
+    output  logic          mmu_ifu_sec,            
+    output  logic  [27:0]  mmu_pmp_pa2,            
+    output  logic  [27:0]  mmu_sysmap_pa2         
 );
-
-// &Ports; @28
-input           arb_iutlb_grant;        
-input           cp0_mmu_icg_en;         
-input           cp0_mmu_no_op_req;      
-input           cp0_mmu_sum;            
-input   [1 :0]  cp0_yy_priv_mode;       
-input           cpurst_b;               
-input           forever_cpuclk;         
-input           hpcp_mmu_cnt_en;        
-input           ifu_mmu_abort;          
-input   [62:0]  ifu_mmu_va;             
-input           ifu_mmu_va_vld;         
-input           jtlb_iutlb_acc_err;     
-input           jtlb_iutlb_pgflt;       
-input           jtlb_iutlb_ref_cmplt;   
-input           jtlb_iutlb_ref_pavld;   
-input   [13:0]  jtlb_utlb_ref_flg;      
-input   [2 :0]  jtlb_utlb_ref_pgs;      
-input   [27:0]  jtlb_utlb_ref_ppn;      
-input   [26:0]  jtlb_utlb_ref_vpn;      
-input   [26:0]  lsu_mmu_tlb_va;         
-input           pad_yy_icg_scan_en;     
-input   [3 :0]  pmp_mmu_flg2;           
-input           regs_mmu_en;            
-input           regs_utlb_clr;          
-input   [4 :0]  sysmap_mmu_flg2;        
-input           tlboper_utlb_clr;       
-input           tlboper_utlb_inv_va_req; 
-input           utlb_clk;               
-output          iutlb_arb_cmplt;        
-output          iutlb_arb_req;          
-output  [26:0]  iutlb_arb_vpn;          
-output          iutlb_ptw_wfc;          
-output  [1 :0]  iutlb_top_ref_cur_st;   
-output          iutlb_top_scd_updt;     
-output          mmu_hpcp_iutlb_miss;    
-output          mmu_ifu_buf;            
-output          mmu_ifu_ca;             
-output          mmu_ifu_deny;           
-output  [27:0]  mmu_ifu_pa;             
-output          mmu_ifu_pavld;          
-output          mmu_ifu_pgflt;          
-output          mmu_ifu_sec;            
-output  [27:0]  mmu_pmp_pa2;            
-output  [27:0]  mmu_sysmap_pa2;         
-
 // &Regs; @29
 reg     [3 :0]  iutlb_fst_wen;          
 reg             iutlb_miss;             
@@ -118,15 +71,15 @@ reg     [2 :0]  ref_cur_st;
 reg     [2 :0]  ref_nxt_st;             
 
 // &Wires; @30
-wire            arb_iutlb_grant;        
+//wire            arb_iutlb_grant;        
 wire            cp0_mach_mode;          
-wire            cp0_mmu_icg_en;         
-wire            cp0_mmu_no_op_req;      
-wire            cp0_mmu_sum;            
+//wire            cp0_mmu_icg_en;         
+//wire            cp0_mmu_no_op_req;      
+//wire            cp0_mmu_sum;            
 wire            cp0_supv_mode;          
 wire            cp0_user_mode;          
-wire    [1 :0]  cp0_yy_priv_mode;       
-wire            cpurst_b;               
+//wire    [1 :0]  cp0_yy_priv_mode;       
+//wire            cpurst_b;               
 wire    [13:0]  entry0_flg;             
 wire            entry0_hit;             
 wire    [2 :0]  entry0_pgs;             
@@ -390,20 +343,20 @@ wire            entry9_vld;
 wire    [31:0]  entry_hit;              
 wire    [31:0]  entry_vld;              
 wire    [13:0]  flg_fin;                
-wire            forever_cpuclk;         
-wire            hpcp_mmu_cnt_en;        
-wire            ifu_mmu_abort;          
-wire    [62:0]  ifu_mmu_va;             
-wire            ifu_mmu_va_vld;         
+//wire            forever_cpuclk;         
+//wire            hpcp_mmu_cnt_en;        
+//wire            ifu_mmu_abort;          
+//wire    [62:0]  ifu_mmu_va;             
+//wire            ifu_mmu_va_vld;         
 wire            iplru_clk;              
 wire            iplru_clk_en;           
 wire            iplru_upd_en;           
 wire            iutlb_acc_flt;          
 wire            iutlb_addr_hit;         
 wire            iutlb_addr_hit_vld;     
-wire            iutlb_arb_cmplt;        
-wire            iutlb_arb_req;          
-wire    [26:0]  iutlb_arb_vpn;          
+//wire            iutlb_arb_cmplt;        
+//wire            iutlb_arb_req;          
+//wire    [26:0]  iutlb_arb_vpn;          
 wire            iutlb_bypass_vld;       
 wire            iutlb_clk;              
 wire            iutlb_clk_en;           
@@ -430,49 +383,49 @@ wire            iutlb_plru_read_hit_vld;
 wire            iutlb_plru_refill_on;   
 wire            iutlb_plru_refill_vld;  
 wire            iutlb_pmp_chk_vld;      
-wire            iutlb_ptw_wfc;          
+//wire            iutlb_ptw_wfc;          
 wire            iutlb_ref_pgflt;        
 wire            iutlb_refill_on;        
 wire            iutlb_refill_vld;       
 wire            iutlb_swp_en;           
-wire    [1 :0]  iutlb_top_ref_cur_st;   
-wire            iutlb_top_scd_updt;     
+//wire    [1 :0]  iutlb_top_ref_cur_st;   
+//wire            iutlb_top_scd_updt;     
 wire            iutlb_va_illegal;       
 wire            iutlb_wfc;              
 wire            jtlb_acc_fault;         
-wire            jtlb_iutlb_acc_err;     
-wire            jtlb_iutlb_pgflt;       
-wire            jtlb_iutlb_ref_cmplt;   
-wire            jtlb_iutlb_ref_pavld;   
-wire    [13:0]  jtlb_utlb_ref_flg;      
-wire    [2 :0]  jtlb_utlb_ref_pgs;      
-wire    [27:0]  jtlb_utlb_ref_ppn;      
-wire    [26:0]  jtlb_utlb_ref_vpn;      
-wire    [26:0]  lsu_mmu_tlb_va;         
-wire            mmu_hpcp_iutlb_miss;    
-wire            mmu_ifu_buf;            
-wire            mmu_ifu_ca;             
-wire            mmu_ifu_deny;           
-wire    [27:0]  mmu_ifu_pa;             
-wire            mmu_ifu_pavld;          
-wire            mmu_ifu_pgflt;          
-wire            mmu_ifu_sec;            
-wire    [27:0]  mmu_pmp_pa2;            
-wire    [27:0]  mmu_sysmap_pa2;         
+//wire            jtlb_iutlb_acc_err;     
+//wire            jtlb_iutlb_pgflt;       
+//wire            jtlb_iutlb_ref_cmplt;   
+//wire            jtlb_iutlb_ref_pavld;   
+//wire    [13:0]  jtlb_utlb_ref_flg;      
+//wire    [2 :0]  jtlb_utlb_ref_pgs;      
+//wire    [27:0]  jtlb_utlb_ref_ppn;      
+//wire    [26:0]  jtlb_utlb_ref_vpn;      
+//wire    [26:0]  lsu_mmu_tlb_va;         
+//wire            mmu_hpcp_iutlb_miss;    
+//wire            mmu_ifu_buf;            
+//wire            mmu_ifu_ca;             
+//wire            mmu_ifu_deny;           
+//wire    [27:0]  mmu_ifu_pa;             
+//wire            mmu_ifu_pavld;          
+//wire            mmu_ifu_pgflt;          
+//wire            mmu_ifu_sec;            
+//wire    [27:0]  mmu_pmp_pa2;            
+//wire    [27:0]  mmu_sysmap_pa2;         
 wire    [27:0]  pa_fin;                 
 wire    [26:0]  pa_offset;              
 wire            pabuf_clk;              
 wire            pabuf_clk_en;           
-wire            pad_yy_icg_scan_en;     
+//wire            pad_yy_icg_scan_en;     
 wire    [2 :0]  pgs_fin;                
 wire    [31:0]  plru_iutlb_ref_num;     
-wire    [3 :0]  pmp_mmu_flg2;           
-wire            regs_mmu_en;            
-wire            regs_utlb_clr;          
-wire    [4 :0]  sysmap_mmu_flg2;        
-wire            tlboper_utlb_clr;       
-wire            tlboper_utlb_inv_va_req; 
-wire            utlb_clk;               
+//wire    [3 :0]  pmp_mmu_flg2;           
+//wire            regs_mmu_en;            
+//wire            regs_utlb_clr;          
+//wire    [4 :0]  sysmap_mmu_flg2;        
+//wire            tlboper_utlb_clr;       
+//wire            tlboper_utlb_inv_va_req; 
+//wire            utlb_clk;               
 wire    [13:0]  utlb_fst_swp_flg;       
 wire    [2 :0]  utlb_fst_swp_pgs;       
 wire    [27:0]  utlb_fst_swp_ppn;       
@@ -692,7 +645,7 @@ gated_clk_cell  x_iutlb_plru_gateclk (
 //           .clk_out    (iplru_clk     ) @168
 //          ); @169
 
-always @(posedge iplru_clk or negedge cpurst_b)
+always_ff @(posedge iplru_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     iutlb_plru_read_hit[31:0] <= 32'b0;
@@ -719,7 +672,7 @@ assign iutlb_plru_read_hit_vld = |iutlb_plru_read_hit[31:0];
 //                                           && regs_mmu_en
 //                                           && !cp0_mmu_no_op_req;
 //
-//always @(posedge iutlb_clk or negedge cpurst_b)
+//always_ff @(posedge iutlb_clk or negedge cpurst_b)
 //begin
 //  if (!cpurst_b)
 //    cmp_cur_st <= FST_CMP;
@@ -772,7 +725,7 @@ assign iutlb_miss_vld = ifu_mmu_va_vld && !iutlb_addr_hit_vld
                                        && !iutlb_off_hit
                                        && !cp0_mmu_no_op_req;
 
-always @(posedge iutlb_clk or negedge cpurst_b)
+always_ff @(posedge iutlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     ref_cur_st[2:0] <= 3'b0;
@@ -870,7 +823,7 @@ assign iutlb_arb_cmplt    = (ref_cur_st[2:0] == WFC) && jtlb_iutlb_ref_cmplt
 // for hpcp
 assign iutlb_miss_cnt = iutlb_refill_vld && hpcp_mmu_cnt_en;
 
-always @(posedge iutlb_clk or negedge cpurst_b)
+always_ff @(posedge iutlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     iutlb_miss <= 1'b0;
@@ -2155,7 +2108,7 @@ assign iutlb_hit_flg_scd[FLG_WIDTH-1:0] =
 //----------------------------------------------------------
 //                  Flop utlb second result for timing
 //----------------------------------------------------------
-//always @(posedge iutlb_clk or negedge cpurst_b)
+//always_ff @(posedge iutlb_clk or negedge cpurst_b)
 //begin
 //  if (!cpurst_b)
 //    iutlb_hit_pa_scd_flop[PPN_WIDTH-1:0] <= {PPN_WIDTH{1'b0}};
@@ -2163,7 +2116,7 @@ assign iutlb_hit_flg_scd[FLG_WIDTH-1:0] =
 //    iutlb_hit_pa_scd_flop[PPN_WIDTH-1:0] <= iutlb_hit_pa_scd[PPN_WIDTH-1:0];
 //end
 //
-//always @(posedge iutlb_clk or negedge cpurst_b)
+//always_ff @(posedge iutlb_clk or negedge cpurst_b)
 //begin
 //  if (!cpurst_b)
 //    iutlb_hit_pgs_scd_flop[PGS_WIDTH-1:0] <= {PGS_WIDTH{1'b0}};
@@ -2171,7 +2124,7 @@ assign iutlb_hit_flg_scd[FLG_WIDTH-1:0] =
 //    iutlb_hit_pgs_scd_flop[PGS_WIDTH-1:0] <= iutlb_hit_pgs_scd[PGS_WIDTH-1:0];
 //end
 //
-//always @(posedge iutlb_clk or negedge cpurst_b)
+//always_ff @(posedge iutlb_clk or negedge cpurst_b)
 //begin
 //  if (!cpurst_b)
 //    iutlb_hit_flg_scd_flop[FLG_WIDTH-1:0] <= {FLG_WIDTH{1'b0}};
@@ -2179,7 +2132,7 @@ assign iutlb_hit_flg_scd[FLG_WIDTH-1:0] =
 //    iutlb_hit_flg_scd_flop[FLG_WIDTH-1:0] <= iutlb_hit_flg_scd[FLG_WIDTH-1:0];
 //end
 
-always @(posedge iutlb_clk or negedge cpurst_b)
+always_ff @(posedge iutlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     iutlb_fst_wen[3:0] <= 4'b0001;
@@ -2226,7 +2179,7 @@ assign iutlb_acc_flt  = jtlb_iutlb_acc_err && iutlb_refill_on;
 assign jtlb_acc_fault = iutlb_acc_flt
                     || (iutlb_hit_vld || iutlb_disable_vld) && iutlb_flg_aft_bypass[13];
 
-always @(posedge iutlb_clk or negedge cpurst_b)
+always_ff @(posedge iutlb_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     jtlb_acc_fault_flop <= 1'b0;
@@ -2269,7 +2222,7 @@ gated_clk_cell  x_iutlb_pabuf_gateclk (
 
 assign iutlb_pmp_chk_vld = iutlb_pa_vld && !iutlb_page_fault;
 
-always @(posedge pabuf_clk or negedge cpurst_b)
+always_ff @(posedge pabuf_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     pmp_flg_vld <= 1'b0;
@@ -2279,7 +2232,7 @@ begin
     pmp_flg_vld <= 1'b0;
 end
 
-always @(posedge pabuf_clk)
+always_ff @(posedge pabuf_clk)
 begin
   if(iutlb_pmp_chk_vld)
     iutlb_pa_buf[PPN_WIDTH-1:0] <= iutlb_pa_aft_bypass[PPN_WIDTH-1:0];

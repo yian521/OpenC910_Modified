@@ -15,177 +15,120 @@ limitations under the License.
 
 // &ModuleBeg; @23
 module ct_mmu_ptw(
-  arb_ptw_grant,
-  arb_ptw_mask,
-  cp0_mmu_icg_en,
-  cp0_mmu_maee,
-  cp0_mmu_mpp,
-  cp0_mmu_mprv,
-  cp0_mmu_mxr,
-  cp0_mmu_sum,
-  cp0_yy_priv_mode,
-  cpurst_b,
-  dutlb_ptw_wfc,
-  forever_cpuclk,
-  hpcp_mmu_cnt_en,
-  iutlb_ptw_wfc,
-  jtlb_ptw_req,
-  jtlb_ptw_type,
-  jtlb_ptw_vpn,
-  jtlb_xx_fifo,
-  lsu_mmu_bus_error,
-  lsu_mmu_data,
-  lsu_mmu_data_vld,
-  mmu_hpcp_jtlb_miss,
-  mmu_lsu_data_req,
-  mmu_lsu_data_req_addr,
-  mmu_lsu_data_req_size,
-  mmu_pmp_fetch3,
-  mmu_pmp_pa3,
-  mmu_sysmap_pa3,
-  pad_yy_icg_scan_en,
-  pmp_mmu_flg3,
-  ptw_arb_bank_sel,
-  ptw_arb_data_din,
-  ptw_arb_fifo_din,
-  ptw_arb_pgs,
-  ptw_arb_req,
-  ptw_arb_tag_din,
-  ptw_arb_vpn,
-  ptw_jtlb_dmiss,
-  ptw_jtlb_imiss,
-  ptw_jtlb_pmiss,
-  ptw_jtlb_ref_acc_err,
-  ptw_jtlb_ref_cmplt,
-  ptw_jtlb_ref_data_vld,
-  ptw_jtlb_ref_flg,
-  ptw_jtlb_ref_pgflt,
-  ptw_jtlb_ref_pgs,
-  ptw_jtlb_ref_ppn,
-  ptw_top_cur_st,
-  ptw_top_imiss,
-  regs_ptw_cur_asid,
-  regs_ptw_satp_ppn,
-  sysmap_mmu_flg3,
-  sysmap_mmu_hit3,
-  tlboper_ptw_abort
+    input   logic          arb_ptw_grant,        
+    input   logic          arb_ptw_mask,         
+    input   logic          cp0_mmu_icg_en,       
+    input   logic          cp0_mmu_maee,         
+    input   logic  [1 :0]  cp0_mmu_mpp,          
+    input   logic          cp0_mmu_mprv,         
+    input   logic          cp0_mmu_mxr,          
+    input   logic          cp0_mmu_sum,          
+    input   logic  [1 :0]  cp0_yy_priv_mode,     
+    input   logic          cpurst_b,             
+    input   logic          dutlb_ptw_wfc,        
+    input   logic          forever_cpuclk,       
+    input   logic          hpcp_mmu_cnt_en,      
+    input   logic          iutlb_ptw_wfc,        
+    input   logic          jtlb_ptw_req,         
+    input   logic  [2 :0]  jtlb_ptw_type,        
+    input   logic  [26:0]  jtlb_ptw_vpn,         
+    input   logic  [11:0]  jtlb_xx_fifo,         
+    input   logic          lsu_mmu_bus_error,    
+    input   logic  [63:0]  lsu_mmu_data,         
+    input   logic          lsu_mmu_data_vld,     
+    input   logic          pad_yy_icg_scan_en,   
+    input   logic  [3 :0]  pmp_mmu_flg3,         
+    input   logic  [15:0]  regs_ptw_cur_asid,    
+    input   logic  [27:0]  regs_ptw_satp_ppn,    
+    input   logic  [4 :0]  sysmap_mmu_flg3,      
+    input   logic  [7 :0]  sysmap_mmu_hit3,      
+    input   logic          tlboper_ptw_abort,    
+    output  logic          mmu_hpcp_jtlb_miss,   
+    output  logic          mmu_lsu_data_req,     
+    output  logic  [39:0]  mmu_lsu_data_req_addr, 
+    output  logic          mmu_lsu_data_req_size, 
+    output  logic          mmu_pmp_fetch3,       
+    output  logic  [27:0]  mmu_pmp_pa3,          
+    output  logic  [27:0]  mmu_sysmap_pa3,       
+    output  logic  [3 :0]  ptw_arb_bank_sel,     
+    output  logic  [41:0]  ptw_arb_data_din,     
+    output  logic  [3 :0]  ptw_arb_fifo_din,     
+    output  logic  [2 :0]  ptw_arb_pgs,          
+    output  logic          ptw_arb_req,          
+    output  logic  [47:0]  ptw_arb_tag_din,      
+    output  logic  [26:0]  ptw_arb_vpn,          
+    output  logic          ptw_jtlb_dmiss,       
+    output  logic          ptw_jtlb_imiss,       
+    output  logic          ptw_jtlb_pmiss,       
+    output  logic          ptw_jtlb_ref_acc_err, 
+    output  logic          ptw_jtlb_ref_cmplt,   
+    output  logic          ptw_jtlb_ref_data_vld, 
+    output  logic  [13:0]  ptw_jtlb_ref_flg,     
+    output  logic          ptw_jtlb_ref_pgflt,   
+    output  logic  [2 :0]  ptw_jtlb_ref_pgs,     
+    output  logic  [27:0]  ptw_jtlb_ref_ppn,     
+    output  logic  [3 :0]  ptw_top_cur_st,       
+    output  logic          ptw_top_imiss        
 );
-
-// &Ports; @24
-input           arb_ptw_grant;        
-input           arb_ptw_mask;         
-input           cp0_mmu_icg_en;       
-input           cp0_mmu_maee;         
-input   [1 :0]  cp0_mmu_mpp;          
-input           cp0_mmu_mprv;         
-input           cp0_mmu_mxr;          
-input           cp0_mmu_sum;          
-input   [1 :0]  cp0_yy_priv_mode;     
-input           cpurst_b;             
-input           dutlb_ptw_wfc;        
-input           forever_cpuclk;       
-input           hpcp_mmu_cnt_en;      
-input           iutlb_ptw_wfc;        
-input           jtlb_ptw_req;         
-input   [2 :0]  jtlb_ptw_type;        
-input   [26:0]  jtlb_ptw_vpn;         
-input   [11:0]  jtlb_xx_fifo;         
-input           lsu_mmu_bus_error;    
-input   [63:0]  lsu_mmu_data;         
-input           lsu_mmu_data_vld;     
-input           pad_yy_icg_scan_en;   
-input   [3 :0]  pmp_mmu_flg3;         
-input   [15:0]  regs_ptw_cur_asid;    
-input   [27:0]  regs_ptw_satp_ppn;    
-input   [4 :0]  sysmap_mmu_flg3;      
-input   [7 :0]  sysmap_mmu_hit3;      
-input           tlboper_ptw_abort;    
-output          mmu_hpcp_jtlb_miss;   
-output          mmu_lsu_data_req;     
-output  [39:0]  mmu_lsu_data_req_addr; 
-output          mmu_lsu_data_req_size; 
-output          mmu_pmp_fetch3;       
-output  [27:0]  mmu_pmp_pa3;          
-output  [27:0]  mmu_sysmap_pa3;       
-output  [3 :0]  ptw_arb_bank_sel;     
-output  [41:0]  ptw_arb_data_din;     
-output  [3 :0]  ptw_arb_fifo_din;     
-output  [2 :0]  ptw_arb_pgs;          
-output          ptw_arb_req;          
-output  [47:0]  ptw_arb_tag_din;      
-output  [26:0]  ptw_arb_vpn;          
-output          ptw_jtlb_dmiss;       
-output          ptw_jtlb_imiss;       
-output          ptw_jtlb_pmiss;       
-output          ptw_jtlb_ref_acc_err; 
-output          ptw_jtlb_ref_cmplt;   
-output          ptw_jtlb_ref_data_vld; 
-output  [13:0]  ptw_jtlb_ref_flg;     
-output          ptw_jtlb_ref_pgflt;   
-output  [2 :0]  ptw_jtlb_ref_pgs;     
-output  [27:0]  ptw_jtlb_ref_ppn;     
-output  [3 :0]  ptw_top_cur_st;       
-output          ptw_top_imiss;        
-
 // &Regs; @25
 reg             jtlb_miss;            
 reg     [63:0]  lsu_data_flop;        
-reg     [4 :0]  ptw_cur_st;           
+//reg     [4 :0]  ptw_cur_st;           
 reg     [11:0]  ptw_fifo;             
 reg     [7 :0]  ptw_hit_num;          
-reg     [4 :0]  ptw_nxt_abt_st;       
-reg     [4 :0]  ptw_nxt_st;           
+//reg     [4 :0]  ptw_nxt_abt_st;       
+//reg     [4 :0]  ptw_nxt_st;           
 reg     [39:0]  ptw_req_addr;         
 reg     [2 :0]  ptw_type;             
 reg     [26:0]  ptw_vpn;              
 reg     [2 :0]  ref_pgs;              
 
 // &Wires; @26
-wire            arb_ptw_grant;        
-wire            arb_ptw_mask;         
+//wire            arb_ptw_grant;        
+//wire            arb_ptw_mask;         
 wire            cp0_mach_mode;        
-wire            cp0_mmu_icg_en;       
-wire            cp0_mmu_maee;         
-wire    [1 :0]  cp0_mmu_mpp;          
-wire            cp0_mmu_mprv;         
-wire            cp0_mmu_mxr;          
-wire            cp0_mmu_sum;          
+//wire            cp0_mmu_icg_en;       
+//wire            cp0_mmu_maee;         
+//wire    [1 :0]  cp0_mmu_mpp;          
+//wire            cp0_mmu_mprv;         
+//wire            cp0_mmu_mxr;          
+//wire            cp0_mmu_sum;          
 wire    [1 :0]  cp0_priv_mode;        
 wire            cp0_supv_mode;        
 wire            cp0_user_mode;        
-wire    [1 :0]  cp0_yy_priv_mode;     
-wire            cpurst_b;             
-wire            dutlb_ptw_wfc;        
-wire            forever_cpuclk;       
-wire            hpcp_mmu_cnt_en;      
-wire            iutlb_ptw_wfc;        
+//wire    [1 :0]  cp0_yy_priv_mode;     
+//wire            cpurst_b;             
+//wire            dutlb_ptw_wfc;        
+//wire            forever_cpuclk;       
+//wire            hpcp_mmu_cnt_en;      
+//wire            iutlb_ptw_wfc;        
 wire            jtlb_miss_cnt;        
-wire            jtlb_ptw_req;         
-wire    [2 :0]  jtlb_ptw_type;        
-wire    [26:0]  jtlb_ptw_vpn;         
-wire    [11:0]  jtlb_xx_fifo;         
-wire            lsu_mmu_bus_error;    
-wire    [63:0]  lsu_mmu_data;         
-wire            lsu_mmu_data_vld;     
-wire            mmu_hpcp_jtlb_miss;   
-wire            mmu_lsu_data_req;     
-wire    [39:0]  mmu_lsu_data_req_addr; 
-wire            mmu_lsu_data_req_size; 
-wire            mmu_pmp_fetch3;       
-wire    [27:0]  mmu_pmp_pa3;          
-wire    [27:0]  mmu_sysmap_pa3;       
-wire            pad_yy_icg_scan_en;   
-wire    [3 :0]  pmp_mmu_flg3;         
+//wire            jtlb_ptw_req;         
+//wire    [2 :0]  jtlb_ptw_type;        
+//wire    [26:0]  jtlb_ptw_vpn;         
+//wire    [11:0]  jtlb_xx_fifo;         
+//wire            lsu_mmu_bus_error;    
+//wire    [63:0]  lsu_mmu_data;         
+//wire            lsu_mmu_data_vld;     
+//wire            mmu_hpcp_jtlb_miss;   
+//wire            mmu_lsu_data_req;     
+//wire    [39:0]  mmu_lsu_data_req_addr; 
+//wire            mmu_lsu_data_req_size; 
+//wire            mmu_pmp_fetch3;       
+//wire    [27:0]  mmu_pmp_pa3;          
+//wire    [27:0]  mmu_sysmap_pa3;       
+//wire            pad_yy_icg_scan_en;   
+//wire    [3 :0]  pmp_mmu_flg3;         
 wire            ptw_addr_fst;         
 wire            ptw_addr_scd;         
 wire            ptw_addr_thd;         
-wire    [3 :0]  ptw_arb_bank_sel;     
-wire    [41:0]  ptw_arb_data_din;     
-wire    [3 :0]  ptw_arb_fifo_din;     
-wire    [2 :0]  ptw_arb_pgs;          
-wire            ptw_arb_req;          
-wire    [47:0]  ptw_arb_tag_din;      
-wire    [26:0]  ptw_arb_vpn;          
+//wire    [3 :0]  ptw_arb_bank_sel;     
+//wire    [41:0]  ptw_arb_data_din;     
+//wire    [3 :0]  ptw_arb_fifo_din;     
+//wire    [2 :0]  ptw_arb_pgs;          
+//wire            ptw_arb_req;          
+//wire    [47:0]  ptw_arb_tag_din;      
+//wire    [26:0]  ptw_arb_vpn;          
 wire            ptw_chk_cross;        
 wire            ptw_chk_fst;          
 wire            ptw_chk_scd;          
@@ -207,16 +150,16 @@ wire    [8 :0]  ptw_flg;
 wire    [39:0]  ptw_fst_addr;         
 wire            ptw_hit_1g;           
 wire            ptw_hit_2m;           
-wire            ptw_jtlb_dmiss;       
-wire            ptw_jtlb_imiss;       
-wire            ptw_jtlb_pmiss;       
-wire            ptw_jtlb_ref_acc_err; 
-wire            ptw_jtlb_ref_cmplt;   
-wire            ptw_jtlb_ref_data_vld; 
-wire    [13:0]  ptw_jtlb_ref_flg;     
-wire            ptw_jtlb_ref_pgflt;   
-wire    [2 :0]  ptw_jtlb_ref_pgs;     
-wire    [27:0]  ptw_jtlb_ref_ppn;     
+//wire            ptw_jtlb_dmiss;       
+//wire            ptw_jtlb_imiss;       
+//wire            ptw_jtlb_pmiss;       
+//wire            ptw_jtlb_ref_acc_err; 
+//wire            ptw_jtlb_ref_cmplt;   
+//wire            ptw_jtlb_ref_data_vld; 
+//wire    [13:0]  ptw_jtlb_ref_flg;     
+//wire            ptw_jtlb_ref_pgflt;   
+//wire    [2 :0]  ptw_jtlb_ref_pgs;     
+//wire    [27:0]  ptw_jtlb_ref_ppn;     
 wire            ptw_leaf_vld;         
 wire            ptw_load_type;        
 wire            ptw_page_flt;         
@@ -238,13 +181,13 @@ wire    [39:0]  ptw_req_addr_pre;
 wire    [39:0]  ptw_scd_addr;         
 wire            ptw_store_type;       
 wire    [39:0]  ptw_thd_addr;         
-wire    [3 :0]  ptw_top_cur_st;       
-wire            ptw_top_imiss;        
-wire    [15:0]  regs_ptw_cur_asid;    
-wire    [27:0]  regs_ptw_satp_ppn;    
-wire    [4 :0]  sysmap_mmu_flg3;      
-wire    [7 :0]  sysmap_mmu_hit3;      
-wire            tlboper_ptw_abort;    
+//wire    [3 :0]  ptw_top_cur_st;       
+//wire            ptw_top_imiss;        
+//wire    [15:0]  regs_ptw_cur_asid;    
+//wire    [27:0]  regs_ptw_satp_ppn;    
+//wire    [4 :0]  sysmap_mmu_flg3;      
+//wire    [7 :0]  sysmap_mmu_hit3;      
+//wire            tlboper_ptw_abort;    
 
 
 parameter VADDR_WIDTH = 39;              // VADDR
@@ -304,28 +247,28 @@ gated_clk_cell  x_ptw_gateclk (
 //==========================================================
 //                  PTW FSM
 //==========================================================
-parameter PTW_IDLE     = 5'b00000,
-          PTW_FST_PMP  = 5'b00001,
-          PTW_FST_DATA = 5'b00010,
-          PTW_FST_CHK  = 5'b00011,
-          PTW_SCD_PMP  = 5'b00100,
-          PTW_SCD_DATA = 5'b00101,
-          PTW_SCD_CHK  = 5'b00110,
-          PTW_THD_PMP  = 5'b00111,
-          PTW_THD_DATA = 5'b01000,
-          PTW_THD_CHK  = 5'b01001,
-          PTW_ACC_FLT  = 5'b01010,
-          PTW_PGE_FLT  = 5'b01011,
-          PTW_DATA_VLD = 5'b01100,
-          PTW_ABT_DATA = 5'b01101,
-          PTW_ABT      = 5'b01110,
-          PTW_MACH_PMP = 5'b01111,
-          PTW_1G_CRS1  = 5'b10000,
-          PTW_1G_CRS2  = 5'b10001,
-          PTW_2M_CRS1  = 5'b10010,
-          PTW_2M_CRS2  = 5'b10011;
+enum logic[4:0]{ PTW_IDLE     = 5'b00000,
+                 PTW_FST_PMP  = 5'b00001,
+                 PTW_FST_DATA = 5'b00010,
+                 PTW_FST_CHK  = 5'b00011,
+                 PTW_SCD_PMP  = 5'b00100,
+                 PTW_SCD_DATA = 5'b00101,
+                 PTW_SCD_CHK  = 5'b00110,
+                 PTW_THD_PMP  = 5'b00111,
+                 PTW_THD_DATA = 5'b01000,
+                 PTW_THD_CHK  = 5'b01001,
+                 PTW_ACC_FLT  = 5'b01010,
+                 PTW_PGE_FLT  = 5'b01011,
+                 PTW_DATA_VLD = 5'b01100,
+                 PTW_ABT_DATA = 5'b01101,
+                 PTW_ABT      = 5'b01110,
+                 PTW_MACH_PMP = 5'b01111,
+                 PTW_1G_CRS1  = 5'b10000,
+                 PTW_1G_CRS2  = 5'b10001,
+                 PTW_2M_CRS1  = 5'b10010,
+                 PTW_2M_CRS2  = 5'b10011}ptw_cur_st,ptw_nxt_abt_st,ptw_nxt_st;
 
-always @(posedge ptw_clk or negedge cpurst_b)
+always_ff @(posedge ptw_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     ptw_cur_st[4:0] <= PTW_IDLE;
@@ -336,10 +279,7 @@ begin
 end
 
 // &CombBeg; @106
-always @( ptw_nxt_st[4:0]
-       or ptw_cur_st
-       or lsu_mmu_bus_error
-       or lsu_mmu_data_vld)
+always_comb
 begin
 case (ptw_cur_st)
   PTW_IDLE,
@@ -369,17 +309,7 @@ endcase
 end
 
 // &CombBeg; @133
-always @( cp0_mmu_maee
-       or ptw_hit_2m
-       or jtlb_ptw_req
-       or arb_ptw_grant
-       or ptw_pmp_deny
-       or ptw_cur_st
-       or lsu_mmu_bus_error
-       or lsu_mmu_data_vld
-       or ptw_hit_1g
-       or ptw_page_flt
-       or ptw_chk_cross)
+always_comb
 begin
 case (ptw_cur_st)
 PTW_IDLE:
@@ -556,7 +486,7 @@ assign ptw_addr_scd = ptw_cur_st[4:0] == PTW_FST_DATA && lsu_mmu_data_vld;
 assign ptw_addr_thd = ptw_cur_st[4:0] == PTW_SCD_DATA && lsu_mmu_data_vld;
 
 // flop vpn and fifo bit
-always @(posedge ptw_clk or negedge cpurst_b)
+always_ff @(posedge ptw_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
   begin
@@ -572,7 +502,7 @@ begin
   end
 end
 
-always @(posedge ptw_clk or negedge cpurst_b)
+always_ff @(posedge ptw_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     lsu_data_flop[58:0] <= 59'b0;
@@ -584,7 +514,7 @@ begin
     lsu_data_flop[58:0] <= {lsu_data_flop[58:PPN_WIDTH-9], ptw_vpn[8:0], lsu_data_flop[9:0]};
 end
 
-always @(posedge ptw_clk or negedge cpurst_b)
+always_ff @(posedge ptw_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     lsu_data_flop[63:59] <= 5'b0;
@@ -592,7 +522,7 @@ begin
     lsu_data_flop[63:59] <= lsu_mmu_data[63:59];
 end
 
-always @(posedge ptw_clk or negedge cpurst_b)
+always_ff @(posedge ptw_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     ptw_req_addr[PADDR_WIDTH-1:0] <= {PADDR_WIDTH{1'b0}};
@@ -610,7 +540,7 @@ begin
     ptw_req_addr[PADDR_WIDTH-1:0] <= {lsu_data_flop[PPN_WIDTH+9:PPN_WIDTH-9], ptw_vpn[8:0], 12'b0};
 end
 
-always @(posedge ptw_clk or negedge cpurst_b)
+always_ff @(posedge ptw_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     ref_pgs[PGS_WIDTH-1:0] <= {PGS_WIDTH{1'b0}};
@@ -688,7 +618,7 @@ assign ptw_page_flt = ((!ptw_flg[0]                       // not valid
 
 // access cross when:
 // sysmap check 2 and hit num not match
-always @(posedge ptw_clk or negedge cpurst_b)
+always_ff @(posedge ptw_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     ptw_hit_num[7:0] <= 8'b0;
@@ -731,7 +661,7 @@ assign jtlb_miss_cnt = ((ptw_load_type || ptw_store_type) && dutlb_ptw_wfc
                       || ptw_fetch_type && iutlb_ptw_wfc) 
                      &&  ptw_ref_data_vld && hpcp_mmu_cnt_en;
 
-always @(posedge ptw_clk or negedge cpurst_b)
+always_ff @(posedge ptw_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     jtlb_miss <= 1'b0;

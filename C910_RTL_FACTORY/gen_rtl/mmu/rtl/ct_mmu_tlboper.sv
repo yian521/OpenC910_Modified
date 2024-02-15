@@ -15,211 +15,141 @@ limitations under the License.
 
 // &ModuleBeg; @24
 module ct_mmu_tlboper(
-  arb_tlboper_grant,
-  cp0_mmu_icg_en,
-  cp0_mmu_tlb_all_inv,
-  cpurst_b,
-  forever_cpuclk,
-  jtlb_tlboper_asid_hit,
-  jtlb_tlboper_cmplt,
-  jtlb_tlboper_fifo,
-  jtlb_tlboper_read_idle,
-  jtlb_tlboper_sel,
-  jtlb_tlboper_va_hit,
-  jtlb_xx_tc_read,
-  lsu_mmu_tlb_all_inv,
-  lsu_mmu_tlb_asid,
-  lsu_mmu_tlb_asid_all_inv,
-  lsu_mmu_tlb_va,
-  lsu_mmu_tlb_va_all_inv,
-  lsu_mmu_tlb_va_asid_inv,
-  mmu_cp0_tlb_done,
-  mmu_lsu_tlb_inv_done,
-  pad_yy_icg_scan_en,
-  regs_jtlb_cur_flg,
-  regs_jtlb_cur_g,
-  regs_jtlb_cur_ppn,
-  regs_tlboper_cur_asid,
-  regs_tlboper_cur_pgs,
-  regs_tlboper_cur_vpn,
-  regs_tlboper_inv_asid,
-  regs_tlboper_invall,
-  regs_tlboper_invasid,
-  regs_tlboper_mir,
-  regs_tlboper_tlbp,
-  regs_tlboper_tlbr,
-  regs_tlboper_tlbwi,
-  regs_tlboper_tlbwr,
-  tlboper_arb_bank_sel,
-  tlboper_arb_cmp_va,
-  tlboper_arb_data_din,
-  tlboper_arb_fifo_din,
-  tlboper_arb_fifo_write,
-  tlboper_arb_idx,
-  tlboper_arb_idx_not_va,
-  tlboper_arb_req,
-  tlboper_arb_tag_din,
-  tlboper_arb_vpn,
-  tlboper_arb_write,
-  tlboper_jtlb_asid,
-  tlboper_jtlb_asid_sel,
-  tlboper_jtlb_cmp_noasid,
-  tlboper_jtlb_inv_asid,
-  tlboper_jtlb_tlbwr_on,
-  tlboper_ptw_abort,
-  tlboper_regs_cmplt,
-  tlboper_regs_tlbp_cmplt,
-  tlboper_regs_tlbr_cmplt,
-  tlboper_top_lsu_cmplt,
-  tlboper_top_lsu_oper,
-  tlboper_top_tlbiall_cur_st,
-  tlboper_top_tlbiasid_cur_st,
-  tlboper_top_tlbiva_cur_st,
-  tlboper_top_tlbp_cur_st,
-  tlboper_top_tlbr_cur_st,
-  tlboper_top_tlbwi_cur_st,
-  tlboper_top_tlbwr_cur_st,
-  tlboper_utlb_clr,
-  tlboper_utlb_inv_va_req,
-  tlboper_xx_cmplt,
-  tlboper_xx_pgs,
-  tlboper_xx_pgs_en
-);
 
-// &Ports; @25
-input           arb_tlboper_grant;          
-input           cp0_mmu_icg_en;             
-input           cp0_mmu_tlb_all_inv;        
-input           cpurst_b;                   
-input           forever_cpuclk;             
-input           jtlb_tlboper_asid_hit;      
-input           jtlb_tlboper_cmplt;         
-input   [3 :0]  jtlb_tlboper_fifo;          
-input           jtlb_tlboper_read_idle;     
-input   [3 :0]  jtlb_tlboper_sel;           
-input           jtlb_tlboper_va_hit;        
-input           jtlb_xx_tc_read;            
-input           lsu_mmu_tlb_all_inv;        
-input   [15:0]  lsu_mmu_tlb_asid;           
-input           lsu_mmu_tlb_asid_all_inv;   
-input   [26:0]  lsu_mmu_tlb_va;             
-input           lsu_mmu_tlb_va_all_inv;     
-input           lsu_mmu_tlb_va_asid_inv;    
-input           pad_yy_icg_scan_en;         
-input   [13:0]  regs_jtlb_cur_flg;          
-input           regs_jtlb_cur_g;            
-input   [27:0]  regs_jtlb_cur_ppn;          
-input   [15:0]  regs_tlboper_cur_asid;      
-input   [2 :0]  regs_tlboper_cur_pgs;       
-input   [26:0]  regs_tlboper_cur_vpn;       
-input   [15:0]  regs_tlboper_inv_asid;      
-input           regs_tlboper_invall;        
-input           regs_tlboper_invasid;       
-input   [11:0]  regs_tlboper_mir;           
-input           regs_tlboper_tlbp;          
-input           regs_tlboper_tlbr;          
-input           regs_tlboper_tlbwi;         
-input           regs_tlboper_tlbwr;         
-output          mmu_cp0_tlb_done;           
-output          mmu_lsu_tlb_inv_done;       
-output  [3 :0]  tlboper_arb_bank_sel;       
-output          tlboper_arb_cmp_va;         
-output  [41:0]  tlboper_arb_data_din;       
-output  [3 :0]  tlboper_arb_fifo_din;       
-output          tlboper_arb_fifo_write;     
-output  [8 :0]  tlboper_arb_idx;            
-output          tlboper_arb_idx_not_va;     
-output          tlboper_arb_req;            
-output  [47:0]  tlboper_arb_tag_din;        
-output  [26:0]  tlboper_arb_vpn;            
-output          tlboper_arb_write;          
-output  [15:0]  tlboper_jtlb_asid;          
-output          tlboper_jtlb_asid_sel;      
-output          tlboper_jtlb_cmp_noasid;    
-output  [15:0]  tlboper_jtlb_inv_asid;      
-output          tlboper_jtlb_tlbwr_on;      
-output          tlboper_ptw_abort;          
-output          tlboper_regs_cmplt;         
-output          tlboper_regs_tlbp_cmplt;    
-output          tlboper_regs_tlbr_cmplt;    
-output          tlboper_top_lsu_cmplt;      
-output          tlboper_top_lsu_oper;       
-output          tlboper_top_tlbiall_cur_st; 
-output  [2 :0]  tlboper_top_tlbiasid_cur_st; 
-output  [3 :0]  tlboper_top_tlbiva_cur_st;  
-output  [1 :0]  tlboper_top_tlbp_cur_st;    
-output  [1 :0]  tlboper_top_tlbr_cur_st;    
-output  [1 :0]  tlboper_top_tlbwi_cur_st;   
-output  [1 :0]  tlboper_top_tlbwr_cur_st;   
-output          tlboper_utlb_clr;           
-output          tlboper_utlb_inv_va_req;    
-output          tlboper_xx_cmplt;           
-output  [2 :0]  tlboper_xx_pgs;             
-output          tlboper_xx_pgs_en;          
+    input   logic          arb_tlboper_grant,          
+    input   logic          cp0_mmu_icg_en,             
+    input   logic          cp0_mmu_tlb_all_inv,        
+    input   logic          cpurst_b,                   
+    input   logic          forever_cpuclk,             
+    input   logic          jtlb_tlboper_asid_hit,      
+    input   logic          jtlb_tlboper_cmplt,         
+    input   logic  [3 :0]  jtlb_tlboper_fifo,          
+    input   logic          jtlb_tlboper_read_idle,     
+    input   logic  [3 :0]  jtlb_tlboper_sel,           
+    input   logic          jtlb_tlboper_va_hit,        
+    input   logic          jtlb_xx_tc_read,            
+    input   logic          lsu_mmu_tlb_all_inv,        
+    input   logic  [15:0]  lsu_mmu_tlb_asid,           
+    input   logic          lsu_mmu_tlb_asid_all_inv,   
+    input   logic  [26:0]  lsu_mmu_tlb_va,             
+    input   logic          lsu_mmu_tlb_va_all_inv,     
+    input   logic          lsu_mmu_tlb_va_asid_inv,    
+    input   logic          pad_yy_icg_scan_en,         
+    input   logic  [13:0]  regs_jtlb_cur_flg,          
+    input   logic          regs_jtlb_cur_g,            
+    input   logic  [27:0]  regs_jtlb_cur_ppn,          
+    input   logic  [15:0]  regs_tlboper_cur_asid,      
+    input   logic  [2 :0]  regs_tlboper_cur_pgs,       
+    input   logic  [26:0]  regs_tlboper_cur_vpn,       
+    input   logic  [15:0]  regs_tlboper_inv_asid,      
+    input   logic          regs_tlboper_invall,        
+    input   logic          regs_tlboper_invasid,       
+    input   logic  [11:0]  regs_tlboper_mir,           
+    input   logic          regs_tlboper_tlbp,          
+    input   logic          regs_tlboper_tlbr,          
+    input   logic          regs_tlboper_tlbwi,         
+    input   logic          regs_tlboper_tlbwr,         
+    output  logic          mmu_cp0_tlb_done,           
+    output  logic          mmu_lsu_tlb_inv_done,       
+    output  logic  [3 :0]  tlboper_arb_bank_sel,       
+    output  logic          tlboper_arb_cmp_va,         
+    output  logic  [41:0]  tlboper_arb_data_din,       
+    output  logic  [3 :0]  tlboper_arb_fifo_din,       
+    output  logic          tlboper_arb_fifo_write,     
+    output  logic  [8 :0]  tlboper_arb_idx,            
+    output  logic          tlboper_arb_idx_not_va,     
+    output  logic          tlboper_arb_req,            
+    output  logic  [47:0]  tlboper_arb_tag_din,        
+    output  logic  [26:0]  tlboper_arb_vpn,            
+    output  logic          tlboper_arb_write,          
+    output  logic  [15:0]  tlboper_jtlb_asid,          
+    output  logic          tlboper_jtlb_asid_sel,      
+    output  logic          tlboper_jtlb_cmp_noasid,    
+    output  logic  [15:0]  tlboper_jtlb_inv_asid,      
+    output  logic          tlboper_jtlb_tlbwr_on,      
+    output  logic          tlboper_ptw_abort,          
+    output  logic          tlboper_regs_cmplt,         
+    output  logic          tlboper_regs_tlbp_cmplt,    
+    output  logic          tlboper_regs_tlbr_cmplt,    
+    output  logic          tlboper_top_lsu_cmplt,      
+    output  logic          tlboper_top_lsu_oper,       
+    output  logic          tlboper_top_tlbiall_cur_st, 
+    output  logic  [2 :0]  tlboper_top_tlbiasid_cur_st, 
+    output  logic  [3 :0]  tlboper_top_tlbiva_cur_st,  
+    output  logic  [1 :0]  tlboper_top_tlbp_cur_st,    
+    output  logic  [1 :0]  tlboper_top_tlbr_cur_st,    
+    output  logic  [1 :0]  tlboper_top_tlbwi_cur_st,   
+    output  logic  [1 :0]  tlboper_top_tlbwr_cur_st,   
+    output  logic          tlboper_utlb_clr,           
+    output  logic          tlboper_utlb_inv_va_req,    
+    output  logic          tlboper_xx_cmplt,           
+    output  logic  [2 :0]  tlboper_xx_pgs,             
+    output  logic          tlboper_xx_pgs_en       
+);
 
 // &Regs; @26
 reg             lsu_oper_cmplt;             
 reg     [10:0]  tlb_inv_cnt;                
 reg             tlb_lsu_oper_flop;          
-reg             tlbiall_cur_st;             
-reg             tlbiall_nxt_st;             
-reg     [2 :0]  tlbiasid_cur_st;            
-reg     [2 :0]  tlbiasid_nxt_st;            
-reg     [3 :0]  tlbiva_cur_st;              
-reg     [3 :0]  tlbiva_nxt_st;              
-reg     [1 :0]  tlbp_cur_st;                
-reg     [1 :0]  tlbp_nxt_st;                
-reg     [1 :0]  tlbr_cur_st;                
-reg     [1 :0]  tlbr_nxt_st;                
-reg     [1 :0]  tlbwi_cur_st;               
-reg     [1 :0]  tlbwi_nxt_st;               
-reg     [1 :0]  tlbwr_cur_st;               
-reg     [1 :0]  tlbwr_nxt_st;               
+//reg             tlbiall_cur_st;             
+//reg             tlbiall_nxt_st;             
+//reg     [2 :0]  tlbiasid_cur_st;            
+//reg     [2 :0]  tlbiasid_nxt_st;            
+//reg     [3 :0]  tlbiva_cur_st;              
+//reg     [3 :0]  tlbiva_nxt_st;              
+//reg     [1 :0]  tlbp_cur_st;                
+//reg     [1 :0]  tlbp_nxt_st;                
+//reg     [1 :0]  tlbr_cur_st;                
+//reg     [1 :0]  tlbr_nxt_st;                
+//reg     [1 :0]  tlbwi_cur_st;               
+//reg     [1 :0]  tlbwi_nxt_st;               
+//reg     [1 :0]  tlbwr_cur_st;               
+//reg     [1 :0]  tlbwr_nxt_st;               
 
 // &Wires; @27
-wire            arb_tlboper_grant;          
+//wire            arb_tlboper_grant;          
 wire            bank_sel_all;               
 wire            bank_sel_idx;               
 wire            bank_sel_wr;                
-wire            cp0_mmu_icg_en;             
-wire            cp0_mmu_tlb_all_inv;        
-wire            cpurst_b;                   
-wire            forever_cpuclk;             
+//wire            cp0_mmu_icg_en;             
+//wire            cp0_mmu_tlb_all_inv;        
+//wire            cpurst_b;                   
+//wire            forever_cpuclk;             
 wire    [3 :0]  idx_sel;                    
 wire    [10:0]  invall_cnt;                 
 wire    [10:0]  invasid_cnt;                
 wire    [10:0]  jtlb_cnt;                   
-wire            jtlb_tlboper_asid_hit;      
-wire            jtlb_tlboper_cmplt;         
-wire    [3 :0]  jtlb_tlboper_fifo;          
-wire            jtlb_tlboper_read_idle;     
-wire    [3 :0]  jtlb_tlboper_sel;           
-wire            jtlb_tlboper_va_hit;        
-wire            jtlb_xx_tc_read;            
-wire            lsu_mmu_tlb_all_inv;        
-wire    [15:0]  lsu_mmu_tlb_asid;           
-wire            lsu_mmu_tlb_asid_all_inv;   
-wire    [26:0]  lsu_mmu_tlb_va;             
-wire            lsu_mmu_tlb_va_all_inv;     
-wire            lsu_mmu_tlb_va_asid_inv;    
+//wire            jtlb_tlboper_asid_hit;      
+//wire            jtlb_tlboper_cmplt;         
+//wire    [3 :0]  jtlb_tlboper_fifo;          
+//wire            jtlb_tlboper_read_idle;     
+//wire    [3 :0]  jtlb_tlboper_sel;           
+//wire            jtlb_tlboper_va_hit;        
+//wire            jtlb_xx_tc_read;            
+//wire            lsu_mmu_tlb_all_inv;        
+//wire    [15:0]  lsu_mmu_tlb_asid;           
+//wire            lsu_mmu_tlb_asid_all_inv;   
+//wire    [26:0]  lsu_mmu_tlb_va;             
+//wire            lsu_mmu_tlb_va_all_inv;     
+//wire            lsu_mmu_tlb_va_asid_inv;    
 wire            lsu_va_sel;                 
-wire            mmu_cp0_tlb_done;           
-wire            mmu_lsu_tlb_inv_done;       
-wire            pad_yy_icg_scan_en;         
-wire    [13:0]  regs_jtlb_cur_flg;          
-wire            regs_jtlb_cur_g;            
-wire    [27:0]  regs_jtlb_cur_ppn;          
-wire    [15:0]  regs_tlboper_cur_asid;      
-wire    [2 :0]  regs_tlboper_cur_pgs;       
-wire    [26:0]  regs_tlboper_cur_vpn;       
-wire    [15:0]  regs_tlboper_inv_asid;      
-wire            regs_tlboper_invall;        
-wire            regs_tlboper_invasid;       
-wire    [11:0]  regs_tlboper_mir;           
-wire            regs_tlboper_tlbp;          
-wire            regs_tlboper_tlbr;          
-wire            regs_tlboper_tlbwi;         
-wire            regs_tlboper_tlbwr;         
+//wire            mmu_cp0_tlb_done;           
+//wire            mmu_lsu_tlb_inv_done;       
+//wire            pad_yy_icg_scan_en;         
+//wire    [13:0]  regs_jtlb_cur_flg;          
+//wire            regs_jtlb_cur_g;            
+//wire    [27:0]  regs_jtlb_cur_ppn;          
+//wire    [15:0]  regs_tlboper_cur_asid;      
+//wire    [2 :0]  regs_tlboper_cur_pgs;       
+//wire    [26:0]  regs_tlboper_cur_vpn;       
+//wire    [15:0]  regs_tlboper_inv_asid;      
+//wire            regs_tlboper_invall;        
+//wire            regs_tlboper_invasid;       
+//wire    [11:0]  regs_tlboper_mir;           
+//wire            regs_tlboper_tlbp;          
+//wire            regs_tlboper_tlbr;          
+//wire            regs_tlboper_tlbwi;         
+//wire            regs_tlboper_tlbwr;         
 wire            tlb_cnt_inv_on;             
 wire            tlb_inv_all;                
 wire            tlb_inv_asid;               
@@ -260,46 +190,45 @@ wire            tlb_tlbwr_rd_req;
 wire            tlb_tlbwr_req;              
 wire            tlb_tlbwr_wt_req;           
 wire    [26:0]  tlb_vpn_aft_mask;           
-wire    [3 :0]  tlboper_arb_bank_sel;       
-wire            tlboper_arb_cmp_va;         
-wire    [41:0]  tlboper_arb_data_din;       
-wire    [3 :0]  tlboper_arb_fifo_din;       
-wire            tlboper_arb_fifo_write;     
-wire    [8 :0]  tlboper_arb_idx;            
-wire            tlboper_arb_idx_not_va;     
-wire            tlboper_arb_req;            
-wire    [47:0]  tlboper_arb_tag_din;        
-wire    [26:0]  tlboper_arb_vpn;            
-wire            tlboper_arb_write;          
+//wire    [3 :0]  tlboper_arb_bank_sel;       
+//wire            tlboper_arb_cmp_va;         
+//wire    [41:0]  tlboper_arb_data_din;       
+//wire    [3 :0]  tlboper_arb_fifo_din;       
+//wire            tlboper_arb_fifo_write;     
+//wire    [8 :0]  tlboper_arb_idx;            
+//wire            tlboper_arb_idx_not_va;     
+//wire            tlboper_arb_req;            
+//wire    [47:0]  tlboper_arb_tag_din;        
+//wire    [26:0]  tlboper_arb_vpn;            
+//wire            tlboper_arb_write;          
 wire            tlboper_clk;                
 wire            tlboper_clk_en;             
 wire            tlboper_cmplt;              
 wire    [41:0]  tlboper_data_din;           
 wire    [10:0]  tlboper_idx_not_va;         
-wire    [15:0]  tlboper_jtlb_asid;          
-wire            tlboper_jtlb_asid_sel;      
-wire            tlboper_jtlb_cmp_noasid;    
-wire    [15:0]  tlboper_jtlb_inv_asid;      
-wire            tlboper_jtlb_tlbwr_on;      
-wire            tlboper_ptw_abort;          
-wire            tlboper_regs_cmplt;         
-wire            tlboper_regs_tlbp_cmplt;    
-wire            tlboper_regs_tlbr_cmplt;    
+//wire    [15:0]  tlboper_jtlb_asid;          
+//wire            tlboper_jtlb_asid_sel;      
+//wire            tlboper_jtlb_cmp_noasid;    
+//wire    [15:0]  tlboper_jtlb_inv_asid;      
+//wire            tlboper_jtlb_tlbwr_on;      
+//wire            tlboper_ptw_abort;          
+//wire            tlboper_regs_cmplt;         
+//wire            tlboper_regs_tlbp_cmplt;    
+//wire            tlboper_regs_tlbr_cmplt;    
 wire    [47:0]  tlboper_tag_din;            
-wire            tlboper_top_lsu_cmplt;      
-wire            tlboper_top_lsu_oper;       
-wire            tlboper_top_tlbiall_cur_st; 
-wire    [2 :0]  tlboper_top_tlbiasid_cur_st; 
-wire    [3 :0]  tlboper_top_tlbiva_cur_st;  
-wire    [1 :0]  tlboper_top_tlbp_cur_st;    
-wire    [1 :0]  tlboper_top_tlbr_cur_st;    
-wire    [1 :0]  tlboper_top_tlbwi_cur_st;   
-wire    [1 :0]  tlboper_top_tlbwr_cur_st;   
-wire            tlboper_utlb_clr;           
-wire            tlboper_utlb_inv_va_req;    
-wire            tlboper_xx_cmplt;           
-wire    [2 :0]  tlboper_xx_pgs;             
-wire            tlboper_xx_pgs_en;          
+//wire            tlboper_top_lsu_oper;       
+//wire            tlboper_top_tlbiall_cur_st; 
+//wire    [2 :0]  tlboper_top_tlbiasid_cur_st; 
+//wire    [3 :0]  tlboper_top_tlbiva_cur_st;  
+//wire    [1 :0]  tlboper_top_tlbp_cur_st;    
+//wire    [1 :0]  tlboper_top_tlbr_cur_st;    
+//wire    [1 :0]  tlboper_top_tlbwi_cur_st;   
+//wire    [1 :0]  tlboper_top_tlbwr_cur_st;   
+//wire            tlboper_utlb_clr;           
+//wire            tlboper_utlb_inv_va_req;    
+//wire            tlboper_xx_cmplt;           
+//wire    [2 :0]  tlboper_xx_pgs;             
+//wire            tlboper_xx_pgs_en;          
 
 
 parameter VPN_WIDTH  = 39-12;  // VPN
@@ -353,11 +282,11 @@ gated_clk_cell  x_tlboper_gateclk (
 // a. read request to TLB
 // b. compare if the ASID matched ASID in MEH and write result
 //==========================================================
-parameter PIDLE = 2'b00,
-          PWFG  = 2'b01,
-          PWFC  = 2'b11;
+enum logic[1:0]{PIDLE = 2'b00,
+                PWFG  = 2'b01,
+                PWFC  = 2'b11}tlbp_cur_st,tlbp_nxt_st;
 
-always @(posedge tlboper_clk or negedge cpurst_b)
+always_ff @(posedge tlboper_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     tlbp_cur_st[1:0] <= PIDLE;
@@ -366,11 +295,7 @@ begin
 end
 
 // &CombBeg; @82
-always @( tlb_lsu_oper_flop
-       or tlbp_cur_st[1:0]
-       or arb_tlboper_grant
-       or regs_tlboper_tlbp
-       or jtlb_tlboper_cmplt)
+always_comb
 begin
 case(tlbp_cur_st[1:0])
 PIDLE:
@@ -413,11 +338,11 @@ assign tlb_tlbp_cmplt = (tlbp_cur_st[1:0] == PWFC)
 // 1. read request to TLB
 // 2. write result to regs
 //==========================================================
-parameter RIDLE = 2'b00,
-          RWFG  = 2'b01,
-          RWFC  = 2'b11;
+enum logic[1:0] { RIDLE = 2'b00,
+                  RWFG  = 2'b01,
+                  RWFC  = 2'b11}tlbr_cur_st,tlbr_nxt_st;
 
-always @(posedge tlboper_clk or negedge cpurst_b)
+always_ff @(posedge tlboper_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     tlbr_cur_st[1:0] <= RIDLE;
@@ -426,11 +351,7 @@ begin
 end
 
 // &CombBeg; @135
-always @( arb_tlboper_grant
-       or tlbr_cur_st[1:0]
-       or jtlb_tlboper_cmplt
-       or regs_tlboper_tlbr
-       or tlb_lsu_oper)
+always_comb
 begin
 case(tlbr_cur_st[1:0])
 RIDLE:
@@ -473,11 +394,11 @@ assign tlb_tlbr_cmplt = (tlbr_cur_st[1:0] == RWFC)
 // 1. write request to TLB
 // 2. complete
 //==========================================================
-parameter WIIDLE = 2'b00,
-          WIWFG  = 2'b01,
-          WIWFC  = 2'b11;
+enum logic[1:0] { WIIDLE = 2'b00,
+                  WIWFG  = 2'b01,
+                  WIWFC  = 2'b11}tlbwi_cur_st,tlbwi_nxt_st;
 
-always @(posedge tlboper_clk or negedge cpurst_b)
+always_ff @(posedge tlboper_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     tlbwi_cur_st[1:0] <= WIIDLE;
@@ -486,11 +407,7 @@ begin
 end
 
 // &CombBeg; @188
-always @( regs_tlboper_tlbwi
-       or arb_tlboper_grant
-       or jtlb_tlboper_cmplt
-       or tlbwi_cur_st[1:0]
-       or tlb_lsu_oper)
+always_comb
 begin
 case(tlbwi_cur_st[1:0])
 WIIDLE:
@@ -534,12 +451,12 @@ assign tlb_tlbwi_cmplt = (tlbwi_cur_st[1:0] == WIWFC)
 // 2. write request to TLB
 // 3. complete
 //==========================================================
-parameter WRIDLE = 2'b00,
-          WRWFG  = 2'b10,
-          WRTAG  = 2'b01,
-          WRWFC  = 2'b11;
+enum logic[1:0] { WRIDLE = 2'b00,
+                  WRWFG  = 2'b10,
+                  WRTAG  = 2'b01,
+                  WRWFC  = 2'b11}tlbwr_cur_st,tlbwr_nxt_st;
 
-always @(posedge tlboper_clk or negedge cpurst_b)
+always_ff @(posedge tlboper_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     tlbwr_cur_st[1:0] <= WRIDLE;
@@ -548,11 +465,7 @@ begin
 end
 
 // &CombBeg; @243
-always @( regs_tlboper_tlbwr
-       or tlbwr_cur_st
-       or arb_tlboper_grant
-       or jtlb_tlboper_cmplt
-       or tlb_lsu_oper)
+always_comb
 begin
 case(tlbwr_cur_st)
 WRIDLE:
@@ -616,13 +529,13 @@ assign tlb_tlbwr_cmplt  = (tlbwr_cur_st[1:0] == WRWFC)
 // 2. write request to TLB if hit
 // 3. complete
 //==========================================================
-parameter IASID_IDLE = 3'b000,
-          IASID_RD   = 3'b001,
-          IASID_WFC  = 3'b010,
-          IASID_WT   = 3'b011,
-          IASID_NWT  = 3'b100;
+enum logic[2:0] { IASID_IDLE = 3'b000,
+                  IASID_RD   = 3'b001,
+                  IASID_WFC  = 3'b010,
+                  IASID_WT   = 3'b011,
+                  IASID_NWT  = 3'b100}tlbiasid_cur_st,tlbiasid_nxt_st;
 
-always @(posedge tlboper_clk or negedge cpurst_b)
+always_ff @(posedge tlboper_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     tlbiasid_cur_st[2:0] <= IASID_IDLE;
@@ -633,13 +546,7 @@ end
 assign tlb_inv_asid = lsu_mmu_tlb_asid_all_inv && !lsu_oper_cmplt && tlb_sm_idle || regs_tlboper_invasid && !tlb_lsu_oper;
 
 // &CombBeg; @321
-always @( tlb_inv_done
-       or jtlb_tlboper_asid_hit
-       or jtlb_xx_tc_read
-       or arb_tlboper_grant
-       or tlb_inv_asid
-       or tlbiasid_cur_st
-       or jtlb_tlboper_cmplt)
+always_comb
 begin
 case(tlbiasid_cur_st)
 IASID_IDLE:
@@ -708,10 +615,10 @@ assign tlb_invasid_cnt_dec  = ((tlbiasid_cur_st[2:0] ==  IASID_WT)
 // 2. check if counter is zero 
 // 3. complete
 //==========================================================
-parameter IALL_IDLE = 1'b0,
-          IALL_WFC  = 1'b1;
+enum  logic  { IALL_IDLE = 1'b0,
+          IALL_WFC  = 1'b1}tlbiall_cur_st,tlbiall_nxt_st;
 
-always @(posedge tlboper_clk or negedge cpurst_b)
+always_ff @(posedge tlboper_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     tlbiall_cur_st <= IALL_IDLE;
@@ -724,10 +631,7 @@ assign tlb_inv_all = lsu_mmu_tlb_all_inv && !lsu_oper_cmplt && tlb_sm_idle
                   || cp0_mmu_tlb_all_inv && !lsu_oper_cmplt && tlb_sm_idle;
 
 // &CombBeg; @403
-always @( tlb_inv_done
-       or tlb_inv_all
-       or tlbiall_cur_st
-       or arb_tlboper_grant)
+always_comb
 begin
 case(tlbiall_cur_st)
 IALL_IDLE:
@@ -769,22 +673,22 @@ assign tlb_invall_cnt_dec  = (tlbiall_cur_st ==  IALL_WFC)
 // 2. check if VA hit 
 // 3. complete
 //==========================================================
-parameter IVA_IDLE   = 4'b0000,
-          IVA_4K_RD  = 4'b0010,
-          IVA_4K_CMP = 4'b0011,
-          IVA_4K_WR  = 4'b0100,
-          IVA_4K_WT  = 4'b0101,
-          IVA_2M_RD  = 4'b0110,
-          IVA_2M_CMP = 4'b0111,
-          IVA_2M_WR  = 4'b1000,
-          IVA_2M_WT  = 4'b1001,
-          IVA_1G_RD  = 4'b1010,
-          IVA_1G_CMP = 4'b1011,
-          IVA_1G_WR  = 4'b1100,
-          IVA_1G_WT  = 4'b1101,
-          IVA_CMPLT  = 4'b1110;
+enum logic[3:0] { IVA_IDLE   = 4'b0000,
+                  IVA_4K_RD  = 4'b0010,
+                  IVA_4K_CMP = 4'b0011,
+                  IVA_4K_WR  = 4'b0100,
+                  IVA_4K_WT  = 4'b0101,
+                  IVA_2M_RD  = 4'b0110,
+                  IVA_2M_CMP = 4'b0111,
+                  IVA_2M_WR  = 4'b1000,
+                  IVA_2M_WT  = 4'b1001,
+                  IVA_1G_RD  = 4'b1010,
+                  IVA_1G_CMP = 4'b1011,
+                  IVA_1G_WR  = 4'b1100,
+                  IVA_1G_WT  = 4'b1101,
+                  IVA_CMPLT  = 4'b1110}tlbiva_cur_st,tlbiva_nxt_st;
 
-always @(posedge tlboper_clk or negedge cpurst_b)
+always_ff @(posedge tlboper_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     tlbiva_cur_st[3:0] <= IVA_IDLE;
@@ -796,11 +700,7 @@ assign tlb_inv_va = (lsu_mmu_tlb_va_all_inv || lsu_mmu_tlb_va_asid_inv)
                     && !lsu_oper_cmplt && tlb_sm_idle;
 
 // &CombBeg; @469
-always @( tlbiva_cur_st
-       or jtlb_tlboper_va_hit
-       or tlb_inv_va
-       or arb_tlboper_grant
-       or jtlb_tlboper_cmplt)
+always_comb
 begin
 case(tlbiva_cur_st)
 IVA_IDLE:
@@ -949,7 +849,7 @@ assign invasid_cnt[10:0] = 11'b01111111111;
 
 assign jtlb_cnt[10:0] = tlb_inv_all ? invall_cnt[10:0] : invasid_cnt[10:0]; 
 
-always@(posedge tlboper_clk or negedge cpurst_b)
+always_ff@(posedge tlboper_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     tlb_inv_cnt[10:0] <= 11'b0;
@@ -973,7 +873,7 @@ assign tlb_sm_idle  = (tlbp_cur_st[1:0] == PIDLE)          && (tlbr_cur_st[1:0] 
                    && (tlbiva_cur_st[3:0] == IVA_IDLE);
 
 assign tlb_lsu_oper_cmplt = tlb_invasid_cmplt || tlb_invall_cmplt || tlb_invva_cmplt; 
-always@(posedge tlboper_clk or negedge cpurst_b)
+always_ff@(posedge tlboper_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     tlb_lsu_oper_flop <= 1'b0;
@@ -983,7 +883,7 @@ begin
     tlb_lsu_oper_flop <= 1'b0;
 end
 
-always@(posedge tlboper_clk or negedge cpurst_b)
+always_ff@(posedge tlboper_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     lsu_oper_cmplt <= 1'b0;

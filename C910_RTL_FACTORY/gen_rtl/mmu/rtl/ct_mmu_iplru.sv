@@ -15,92 +15,49 @@ limitations under the License.
 
 // &ModuleBeg; @23
 module ct_mmu_iplru(
-  cp0_mmu_icg_en,
-  cpurst_b,
-  entry0_vld,
-  entry10_vld,
-  entry11_vld,
-  entry12_vld,
-  entry13_vld,
-  entry14_vld,
-  entry15_vld,
-  entry16_vld,
-  entry17_vld,
-  entry18_vld,
-  entry19_vld,
-  entry1_vld,
-  entry20_vld,
-  entry21_vld,
-  entry22_vld,
-  entry23_vld,
-  entry24_vld,
-  entry25_vld,
-  entry26_vld,
-  entry27_vld,
-  entry28_vld,
-  entry29_vld,
-  entry2_vld,
-  entry30_vld,
-  entry31_vld,
-  entry3_vld,
-  entry4_vld,
-  entry5_vld,
-  entry6_vld,
-  entry7_vld,
-  entry8_vld,
-  entry9_vld,
-  forever_cpuclk,
-  pad_yy_icg_scan_en,
-  plru_iutlb_ref_num,
-  utlb_plru_read_hit,
-  utlb_plru_read_hit_vld,
-  utlb_plru_refill_on,
-  utlb_plru_refill_vld
+
+    input   logic           cp0_mmu_icg_en,        
+    input   logic           cpurst_b,              
+    input   logic           entry0_vld,            
+    input   logic           entry10_vld,           
+    input   logic           entry11_vld,           
+    input   logic           entry12_vld,           
+    input   logic           entry13_vld,           
+    input   logic           entry14_vld,           
+    input   logic           entry15_vld,           
+    input   logic           entry16_vld,           
+    input   logic           entry17_vld,           
+    input   logic           entry18_vld,           
+    input   logic           entry19_vld,           
+    input   logic           entry1_vld,            
+    input   logic           entry20_vld,           
+    input   logic           entry21_vld,           
+    input   logic           entry22_vld,           
+    input   logic           entry23_vld,           
+    input   logic           entry24_vld,           
+    input   logic           entry25_vld,           
+    input   logic           entry26_vld,           
+    input   logic           entry27_vld,           
+    input   logic           entry28_vld,           
+    input   logic           entry29_vld,           
+    input   logic           entry2_vld,            
+    input   logic           entry30_vld,           
+    input   logic           entry31_vld,           
+    input   logic           entry3_vld,            
+    input   logic           entry4_vld,            
+    input   logic           entry5_vld,            
+    input   logic           entry6_vld,            
+    input   logic           entry7_vld,            
+    input   logic           entry8_vld,            
+    input   logic           entry9_vld,            
+    input   logic           forever_cpuclk,        
+    input   logic           pad_yy_icg_scan_en,    
+    input   logic   [31:0]  utlb_plru_read_hit,    
+    input   logic           utlb_plru_read_hit_vld, 
+    input   logic           utlb_plru_refill_on,   
+    input   logic           utlb_plru_refill_vld,  
+    output  logic   [31:0]  plru_iutlb_ref_num    
 );
-
-// &Ports; @24
-input           cp0_mmu_icg_en;        
-input           cpurst_b;              
-input           entry0_vld;            
-input           entry10_vld;           
-input           entry11_vld;           
-input           entry12_vld;           
-input           entry13_vld;           
-input           entry14_vld;           
-input           entry15_vld;           
-input           entry16_vld;           
-input           entry17_vld;           
-input           entry18_vld;           
-input           entry19_vld;           
-input           entry1_vld;            
-input           entry20_vld;           
-input           entry21_vld;           
-input           entry22_vld;           
-input           entry23_vld;           
-input           entry24_vld;           
-input           entry25_vld;           
-input           entry26_vld;           
-input           entry27_vld;           
-input           entry28_vld;           
-input           entry29_vld;           
-input           entry2_vld;            
-input           entry30_vld;           
-input           entry31_vld;           
-input           entry3_vld;            
-input           entry4_vld;            
-input           entry5_vld;            
-input           entry6_vld;            
-input           entry7_vld;            
-input           entry8_vld;            
-input           entry9_vld;            
-input           forever_cpuclk;        
-input           pad_yy_icg_scan_en;    
-input   [31:0]  utlb_plru_read_hit;    
-input           utlb_plru_read_hit_vld; 
-input           utlb_plru_refill_on;   
-input           utlb_plru_refill_vld;  
-output  [31:0]  plru_iutlb_ref_num;    
-
 // &Regs; @25
 reg     [4 :0]  hit_num_flop;          
 reg     [4 :0]  hit_num_index;         
@@ -139,42 +96,8 @@ reg     [4 :0]  refill_num_index;
 reg     [31:0]  refill_num_onehot;     
 reg     [4 :0]  write_num;             
 
-// &Wires; @26
-wire            cp0_mmu_icg_en;        
-wire            cpurst_b;              
-wire            entry0_vld;            
-wire            entry10_vld;           
-wire            entry11_vld;           
-wire            entry12_vld;           
-wire            entry13_vld;           
-wire            entry14_vld;           
-wire            entry15_vld;           
-wire            entry16_vld;           
-wire            entry17_vld;           
-wire            entry18_vld;           
-wire            entry19_vld;           
-wire            entry1_vld;            
-wire            entry20_vld;           
-wire            entry21_vld;           
-wire            entry22_vld;           
-wire            entry23_vld;           
-wire            entry24_vld;           
-wire            entry25_vld;           
-wire            entry26_vld;           
-wire            entry27_vld;           
-wire            entry28_vld;           
-wire            entry29_vld;           
-wire            entry2_vld;            
-wire            entry30_vld;           
-wire            entry31_vld;           
-wire            entry3_vld;            
-wire            entry4_vld;            
-wire            entry5_vld;            
-wire            entry6_vld;            
-wire            entry7_vld;            
-wire            entry8_vld;            
-wire            entry9_vld;            
-wire            forever_cpuclk;        
+
+      
 wire    [31:0]  hit_num_onehot;        
 wire            lru_clk;               
 wire            lru_clk_en;            
@@ -300,15 +223,15 @@ wire            p4f_read_updt;
 wire            p4f_read_updt_val;     
 wire            p4f_write_updt;        
 wire            p4f_write_updt_val;    
-wire            pad_yy_icg_scan_en;    
-wire    [31:0]  plru_iutlb_ref_num;    
+//wire            pad_yy_icg_scan_en;    
+//wire    [31:0]  plru_iutlb_ref_num;    
 wire    [4 :0]  plru_num;              
 wire            plru_read_updt;        
 wire            plru_write_updt;       
-wire    [31:0]  utlb_plru_read_hit;    
-wire            utlb_plru_read_hit_vld; 
-wire            utlb_plru_refill_on;   
-wire            utlb_plru_refill_vld;  
+//wire    [31:0]  utlb_plru_read_hit;    
+//wire            utlb_plru_read_hit_vld; 
+////wire            utlb_plru_refill_on;   
+//wire            utlb_plru_refill_vld;  
 wire    [31:0]  vld_entry_num;         
 
 
@@ -350,10 +273,9 @@ assign vld_entry_num[31:0] = {entry31_vld, entry30_vld, entry29_vld, entry28_vld
                               entry7_vld,  entry6_vld,  entry5_vld,  entry4_vld,
                               entry3_vld,  entry2_vld,  entry1_vld,  entry0_vld};  
 // &CombBeg; @55
-always @( plru_num[4:0]
-       or vld_entry_num[31:0])
+always_comb
 begin
-casez(vld_entry_num[31:0])
+case(vld_entry_num[31:0])inside
   32'b???????????????????????????????0: write_num[4:0] = 5'b00000;
   32'b??????????????????????????????01: write_num[4:0] = 5'b00001;
   32'b?????????????????????????????011: write_num[4:0] = 5'b00010;
@@ -393,7 +315,7 @@ endcase
 end
 
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     refill_num_index[4:0] <= 5'b0;
@@ -403,7 +325,7 @@ end
 
 
 // &CombBeg; @104
-always @( refill_num_index[4:0])
+always_comb
 begin
 case(refill_num_index[4:0])
   5'h00: refill_num_onehot[31:0] = 32'b00000000000000000000000000000001;
@@ -456,7 +378,7 @@ assign plru_iutlb_ref_num[31:0] = refill_num_onehot[31:0];
 // When utlb hit with different entry, updata PLRU path flop
 assign hit_num_onehot[31:0] = utlb_plru_read_hit[31:0];
 // &CombBeg; @154
-always @( hit_num_onehot[31:0])
+always_comb
 begin
 case(hit_num_onehot[31:0])
   32'b00000000000000000000000000000001: hit_num_index[4:0] = 5'b00000;
@@ -497,7 +419,7 @@ endcase
 end
 
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     hit_num_flop[4:0] <= 5'b0;
@@ -538,7 +460,7 @@ assign plru_read_updt  = utlb_plru_read_hit_vld
 assign p00_write_updt_val = !refill_num_index[4];
 assign p00_read_updt_val  = !hit_num_index[4];
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p00 <= 1'b0;
@@ -559,7 +481,7 @@ assign p10_read_updt      = plru_read_updt  && !hit_num_index[4];
 assign p10_write_updt_val = (refill_num_index[4:3] == 2'b00); 
 assign p10_read_updt_val  = (hit_num_index[4:3] == 2'b00);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p10 <= 1'b0;
@@ -576,7 +498,7 @@ assign p11_read_updt      = plru_read_updt  && hit_num_index[4];
 assign p11_write_updt_val = (refill_num_index[4:3] == 2'b10);
 assign p11_read_updt_val  = (hit_num_index[4:3] == 2'b10);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p11 <= 1'b0;
@@ -599,7 +521,7 @@ assign p20_read_updt      = plru_read_updt
 assign p20_write_updt_val = (refill_num_index[4:2] == 3'b000);
 assign p20_read_updt_val  = (hit_num_index[4:2] == 3'b000);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p20 <= 1'b0;
@@ -618,7 +540,7 @@ assign p21_read_updt      = plru_read_updt
 assign p21_write_updt_val = (refill_num_index[4:2] == 3'b010);
 assign p21_read_updt_val  = (hit_num_index[4:2] == 3'b010);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p21 <= 1'b0;
@@ -637,7 +559,7 @@ assign p22_read_updt      = plru_read_updt
 assign p22_write_updt_val = (refill_num_index[4:2] == 3'b100);
 assign p22_read_updt_val  = (hit_num_index[4:2] == 3'b100);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p22 <= 1'b0;
@@ -656,7 +578,7 @@ assign p23_read_updt      = plru_read_updt
 assign p23_write_updt_val = (refill_num_index[4:2] == 3'b110);
 assign p23_read_updt_val  = (hit_num_index[4:2] == 3'b110);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p23 <= 1'b0;
@@ -679,7 +601,7 @@ assign p30_read_updt      = plru_read_updt
 assign p30_write_updt_val = (refill_num_index[4:1] == 4'b0000);
 assign p30_read_updt_val  = (hit_num_index[4:1] == 4'b0000);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p30 <= 1'b0;
@@ -698,7 +620,7 @@ assign p31_read_updt      = plru_read_updt
 assign p31_write_updt_val = (refill_num_index[4:1] == 4'b0010);
 assign p31_read_updt_val  = (hit_num_index[4:1] == 4'b0010);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p31 <= 1'b0; 
@@ -717,7 +639,7 @@ assign p32_read_updt      = plru_read_updt
 assign p32_write_updt_val = (refill_num_index[4:1] == 4'b0100);
 assign p32_read_updt_val  = (hit_num_index[4:1] == 4'b0100);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p32 <= 1'b0; 
@@ -736,7 +658,7 @@ assign p33_read_updt      = plru_read_updt
 assign p33_write_updt_val = (refill_num_index[4:1] == 4'b0110);
 assign p33_read_updt_val  = (hit_num_index[4:1] == 4'b0110);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p33 <= 1'b0; 
@@ -755,7 +677,7 @@ assign p34_read_updt      = plru_read_updt
 assign p34_write_updt_val = (refill_num_index[4:1] == 4'b1000);
 assign p34_read_updt_val  = (hit_num_index[4:1] == 4'b1000);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p34 <= 1'b0; 
@@ -774,7 +696,7 @@ assign p35_read_updt      = plru_read_updt
 assign p35_write_updt_val = (refill_num_index[4:1] == 4'b1010);
 assign p35_read_updt_val  = (hit_num_index[4:1] == 4'b1010);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p35 <= 1'b0; 
@@ -793,7 +715,7 @@ assign p36_read_updt      = plru_read_updt
 assign p36_write_updt_val = (refill_num_index[4:1] == 4'b1100);
 assign p36_read_updt_val  = (hit_num_index[4:1] == 4'b1100);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p36 <= 1'b0; 
@@ -812,7 +734,7 @@ assign p37_read_updt      = plru_read_updt
 assign p37_write_updt_val = (refill_num_index[4:1] == 4'b1110);
 assign p37_read_updt_val  = (hit_num_index[4:1] == 4'b1110);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p37 <= 1'b0; 
@@ -834,7 +756,7 @@ assign p40_read_updt      = plru_read_updt
 assign p40_write_updt_val = (refill_num_index[4:0] == 5'b00000);
 assign p40_read_updt_val  = (hit_num_index[4:0] == 5'b00000);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p40 <= 1'b0;
@@ -853,7 +775,7 @@ assign p41_read_updt      = plru_read_updt
 assign p41_write_updt_val = (refill_num_index[4:0] == 5'b00010);
 assign p41_read_updt_val  = (hit_num_index[4:0] == 5'b00010);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p41 <= 1'b0; 
@@ -872,7 +794,7 @@ assign p42_read_updt      = plru_read_updt
 assign p42_write_updt_val = (refill_num_index[4:0] == 5'b00100);
 assign p42_read_updt_val  = (hit_num_index[4:0] == 5'b00100);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p42 <= 1'b0; 
@@ -891,7 +813,7 @@ assign p43_read_updt      = plru_read_updt
 assign p43_write_updt_val = (refill_num_index[4:0] == 5'b00110);
 assign p43_read_updt_val  = (hit_num_index[4:0] == 5'b00110);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p43 <= 1'b0; 
@@ -910,7 +832,7 @@ assign p44_read_updt      = plru_read_updt
 assign p44_write_updt_val = (refill_num_index[4:0] == 5'b01000);
 assign p44_read_updt_val  = (hit_num_index[4:0] == 5'b01000);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p44 <= 1'b0; 
@@ -929,7 +851,7 @@ assign p45_read_updt      = plru_read_updt
 assign p45_write_updt_val = (refill_num_index[4:0] == 5'b01010);
 assign p45_read_updt_val  = (hit_num_index[4:0] == 5'b01010);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p45 <= 1'b0; 
@@ -948,7 +870,7 @@ assign p46_read_updt      = plru_read_updt
 assign p46_write_updt_val = (refill_num_index[4:0] == 5'b01100);
 assign p46_read_updt_val  = (hit_num_index[4:0] == 5'b01100);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p46 <= 1'b0; 
@@ -967,7 +889,7 @@ assign p47_read_updt      = plru_read_updt
 assign p47_write_updt_val = (refill_num_index[4:0] == 5'b01110);
 assign p47_read_updt_val  = (hit_num_index[4:0] == 5'b01110);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p47 <= 1'b0; 
@@ -986,7 +908,7 @@ assign p48_read_updt      = plru_read_updt
 assign p48_write_updt_val = (refill_num_index[4:0] == 5'b10000);
 assign p48_read_updt_val  = (hit_num_index[4:0] == 5'b10000);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p48 <= 1'b0;
@@ -1005,7 +927,7 @@ assign p49_read_updt      = plru_read_updt
 assign p49_write_updt_val = (refill_num_index[4:0] == 5'b10010);
 assign p49_read_updt_val  = (hit_num_index[4:0] == 5'b10010);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p49 <= 1'b0; 
@@ -1024,7 +946,7 @@ assign p4a_read_updt      = plru_read_updt
 assign p4a_write_updt_val = (refill_num_index[4:0] == 5'b10100);
 assign p4a_read_updt_val  = (hit_num_index[4:0] == 5'b10100);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p4a <= 1'b0; 
@@ -1043,7 +965,7 @@ assign p4b_read_updt      = plru_read_updt
 assign p4b_write_updt_val = (refill_num_index[4:0] == 5'b10110);
 assign p4b_read_updt_val  = (hit_num_index[4:0] == 5'b10110);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p4b <= 1'b0; 
@@ -1062,7 +984,7 @@ assign p4c_read_updt      = plru_read_updt
 assign p4c_write_updt_val = (refill_num_index[4:0] == 5'b11000);
 assign p4c_read_updt_val  = (hit_num_index[4:0] == 5'b11000);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p4c <= 1'b0; 
@@ -1081,7 +1003,7 @@ assign p4d_read_updt      = plru_read_updt
 assign p4d_write_updt_val = (refill_num_index[4:0] == 5'b11010);
 assign p4d_read_updt_val  = (hit_num_index[4:0] == 5'b11010);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p4d <= 1'b0; 
@@ -1100,7 +1022,7 @@ assign p4e_read_updt      = plru_read_updt
 assign p4e_write_updt_val = (refill_num_index[4:0] == 5'b11100);
 assign p4e_read_updt_val  = (hit_num_index[4:0] == 5'b11100);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p4e <= 1'b0; 
@@ -1119,7 +1041,7 @@ assign p4f_read_updt      = plru_read_updt
 assign p4f_write_updt_val = (refill_num_index[4:0] == 5'b11110);
 assign p4f_read_updt_val  = (hit_num_index[4:0] == 5'b11110);
 
-always @(posedge lru_clk or negedge cpurst_b)
+always_ff @(posedge lru_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     p4f <= 1'b0; 

@@ -15,110 +15,57 @@ limitations under the License.
 
 // &ModuleBeg; @23
 module ct_mmu_regs(
-  cp0_mmu_cskyee,
-  cp0_mmu_icg_en,
-  cp0_mmu_mpp,
-  cp0_mmu_mprv,
-  cp0_mmu_reg_num,
-  cp0_mmu_satp_sel,
-  cp0_mmu_wdata,
-  cp0_mmu_wreg,
-  cp0_yy_priv_mode,
-  cpurst_b,
-  forever_cpuclk,
-  jtlb_regs_hit,
-  jtlb_regs_hit_mult,
-  jtlb_regs_tlbp_hit_index,
-  jtlb_tlbr_asid,
-  jtlb_tlbr_flg,
-  jtlb_tlbr_g,
-  jtlb_tlbr_pgs,
-  jtlb_tlbr_ppn,
-  jtlb_tlbr_vpn,
-  mmu_cp0_cmplt,
-  mmu_cp0_data,
-  mmu_cp0_satp_data,
-  mmu_lsu_mmu_en,
-  mmu_xx_mmu_en,
-  pad_yy_icg_scan_en,
-  regs_jtlb_cur_asid,
-  regs_jtlb_cur_flg,
-  regs_jtlb_cur_g,
-  regs_jtlb_cur_ppn,
-  regs_mmu_en,
-  regs_ptw_cur_asid,
-  regs_ptw_satp_ppn,
-  regs_tlboper_cur_asid,
-  regs_tlboper_cur_pgs,
-  regs_tlboper_cur_vpn,
-  regs_tlboper_inv_asid,
-  regs_tlboper_invall,
-  regs_tlboper_invasid,
-  regs_tlboper_mir,
-  regs_tlboper_tlbp,
-  regs_tlboper_tlbr,
-  regs_tlboper_tlbwi,
-  regs_tlboper_tlbwr,
-  regs_utlb_clr,
-  rtu_mmu_bad_vpn,
-  rtu_mmu_expt_vld,
-  tlboper_regs_cmplt,
-  tlboper_regs_tlbp_cmplt,
-  tlboper_regs_tlbr_cmplt
+    input    logic            cp0_mmu_cskyee,          
+    input    logic            cp0_mmu_icg_en,          
+    input    logic    [1 :0]  cp0_mmu_mpp,             
+    input    logic            cp0_mmu_mprv,            
+    input    logic    [1 :0]  cp0_mmu_reg_num,         
+    input    logic            cp0_mmu_satp_sel,        
+    input    logic    [63:0]  cp0_mmu_wdata,           
+    input    logic            cp0_mmu_wreg,            
+    input    logic    [1 :0]  cp0_yy_priv_mode,        
+    input    logic            cpurst_b,                
+    input    logic            forever_cpuclk,          
+    input    logic            jtlb_regs_hit,           
+    input    logic            jtlb_regs_hit_mult,      
+    input    logic    [10:0]  jtlb_regs_tlbp_hit_index, 
+    input    logic    [15:0]  jtlb_tlbr_asid,          
+    input    logic    [13:0]  jtlb_tlbr_flg,           
+    input    logic            jtlb_tlbr_g,             
+    input    logic    [2 :0]  jtlb_tlbr_pgs,           
+    input    logic    [27:0]  jtlb_tlbr_ppn,           
+    input    logic    [26:0]  jtlb_tlbr_vpn,           
+    input    logic            pad_yy_icg_scan_en,      
+    input    logic    [26:0]  rtu_mmu_bad_vpn,         
+    input    logic            rtu_mmu_expt_vld,        
+    input    logic            tlboper_regs_cmplt,      
+    input    logic            tlboper_regs_tlbp_cmplt, 
+    input    logic            tlboper_regs_tlbr_cmplt, 
+    output   logic            mmu_cp0_cmplt,           
+    output   logic    [63:0]  mmu_cp0_data,            
+    output   logic    [63:0]  mmu_cp0_satp_data,       
+    output   logic            mmu_lsu_mmu_en,          
+    output   logic            mmu_xx_mmu_en,           
+    output   logic    [15:0]  regs_jtlb_cur_asid,      
+    output   logic    [13:0]  regs_jtlb_cur_flg,       
+    output   logic            regs_jtlb_cur_g,         
+    output   logic    [27:0]  regs_jtlb_cur_ppn,       
+    output   logic            regs_mmu_en,             
+    output   logic    [15:0]  regs_ptw_cur_asid,       
+    output   logic    [27:0]  regs_ptw_satp_ppn,       
+    output   logic    [15:0]  regs_tlboper_cur_asid,   
+    output   logic    [2 :0]  regs_tlboper_cur_pgs,    
+    output   logic    [26:0]  regs_tlboper_cur_vpn,    
+    output   logic    [15:0]  regs_tlboper_inv_asid,   
+    output   logic            regs_tlboper_invall,     
+    output   logic            regs_tlboper_invasid,    
+    output   logic    [11:0]  regs_tlboper_mir,        
+    output   logic            regs_tlboper_tlbp,       
+    output   logic            regs_tlboper_tlbr,       
+    output   logic            regs_tlboper_tlbwi,      
+    output   logic            regs_tlboper_tlbwr,      
+    output   logic            regs_utlb_clr          
 );
-
-// &Ports; @24
-input           cp0_mmu_cskyee;          
-input           cp0_mmu_icg_en;          
-input   [1 :0]  cp0_mmu_mpp;             
-input           cp0_mmu_mprv;            
-input   [1 :0]  cp0_mmu_reg_num;         
-input           cp0_mmu_satp_sel;        
-input   [63:0]  cp0_mmu_wdata;           
-input           cp0_mmu_wreg;            
-input   [1 :0]  cp0_yy_priv_mode;        
-input           cpurst_b;                
-input           forever_cpuclk;          
-input           jtlb_regs_hit;           
-input           jtlb_regs_hit_mult;      
-input   [10:0]  jtlb_regs_tlbp_hit_index; 
-input   [15:0]  jtlb_tlbr_asid;          
-input   [13:0]  jtlb_tlbr_flg;           
-input           jtlb_tlbr_g;             
-input   [2 :0]  jtlb_tlbr_pgs;           
-input   [27:0]  jtlb_tlbr_ppn;           
-input   [26:0]  jtlb_tlbr_vpn;           
-input           pad_yy_icg_scan_en;      
-input   [26:0]  rtu_mmu_bad_vpn;         
-input           rtu_mmu_expt_vld;        
-input           tlboper_regs_cmplt;      
-input           tlboper_regs_tlbp_cmplt; 
-input           tlboper_regs_tlbr_cmplt; 
-output          mmu_cp0_cmplt;           
-output  [63:0]  mmu_cp0_data;            
-output  [63:0]  mmu_cp0_satp_data;       
-output          mmu_lsu_mmu_en;          
-output          mmu_xx_mmu_en;           
-output  [15:0]  regs_jtlb_cur_asid;      
-output  [13:0]  regs_jtlb_cur_flg;       
-output          regs_jtlb_cur_g;         
-output  [27:0]  regs_jtlb_cur_ppn;       
-output          regs_mmu_en;             
-output  [15:0]  regs_ptw_cur_asid;       
-output  [27:0]  regs_ptw_satp_ppn;       
-output  [15:0]  regs_tlboper_cur_asid;   
-output  [2 :0]  regs_tlboper_cur_pgs;    
-output  [26:0]  regs_tlboper_cur_vpn;    
-output  [15:0]  regs_tlboper_inv_asid;   
-output          regs_tlboper_invall;     
-output          regs_tlboper_invasid;    
-output  [11:0]  regs_tlboper_mir;        
-output          regs_tlboper_tlbp;       
-output          regs_tlboper_tlbr;       
-output          regs_tlboper_tlbwi;      
-output          regs_tlboper_tlbwr;      
-output          regs_utlb_clr;           
-
 // &Regs; @25
 reg     [15:0]  mcir_asid;               
 reg             mcir_invall;             
@@ -149,33 +96,33 @@ reg             mel_write;
 reg     [11:0]  mir_index;               
 reg             mir_probe;               
 reg             mir_tlbp_tfatal;         
-reg     [63:0]  mmu_cp0_data;            
+//reg     [63:0]  mmu_cp0_data;            
 reg     [15:0]  satp_asid;               
 reg     [3 :0]  satp_mode;               
 reg     [27:0]  satp_ppn;                
 
 // &Wires; @26
-wire            cp0_mmu_cskyee;          
-wire            cp0_mmu_icg_en;          
-wire    [1 :0]  cp0_mmu_mpp;             
-wire            cp0_mmu_mprv;            
-wire    [1 :0]  cp0_mmu_reg_num;         
-wire            cp0_mmu_satp_sel;        
-wire    [63:0]  cp0_mmu_wdata;           
-wire            cp0_mmu_wreg;            
+//wire            cp0_mmu_cskyee;          
+//wire            cp0_mmu_icg_en;          
+//wire    [1 :0]  cp0_mmu_mpp;             
+//wire            cp0_mmu_mprv;            
+//wire    [1 :0]  cp0_mmu_reg_num;         
+//wire            cp0_mmu_satp_sel;        
+//wire    [63:0]  cp0_mmu_wdata;           
+//wire            cp0_mmu_wreg;            
 wire    [1 :0]  cp0_priv_mode;           
-wire    [1 :0]  cp0_yy_priv_mode;        
-wire            cpurst_b;                
-wire            forever_cpuclk;          
-wire            jtlb_regs_hit;           
-wire            jtlb_regs_hit_mult;      
-wire    [10:0]  jtlb_regs_tlbp_hit_index; 
-wire    [15:0]  jtlb_tlbr_asid;          
-wire    [13:0]  jtlb_tlbr_flg;           
-wire            jtlb_tlbr_g;             
-wire    [2 :0]  jtlb_tlbr_pgs;           
-wire    [27:0]  jtlb_tlbr_ppn;           
-wire    [26:0]  jtlb_tlbr_vpn;           
+//wire    [1 :0]  cp0_yy_priv_mode;        
+//wire            cpurst_b;                
+//wire            forever_cpuclk;          
+//wire            jtlb_regs_hit;           
+//wire            jtlb_regs_hit_mult;      
+//wire    [10:0]  jtlb_regs_tlbp_hit_index; 
+//wire    [15:0]  jtlb_tlbr_asid;          
+//wire    [13:0]  jtlb_tlbr_flg;           
+//wire            jtlb_tlbr_g;             
+//wire    [2 :0]  jtlb_tlbr_pgs;           
+//wire    [27:0]  jtlb_tlbr_ppn;           
+//wire    [26:0]  jtlb_tlbr_vpn;           
 wire    [63:0]  mcir_data;               
 wire            mcir_data_no_op;         
 wire            mcir_write_en;           
@@ -185,39 +132,39 @@ wire    [63:0]  mel_data;
 wire            mel_write_en;            
 wire    [63:0]  mir_data;                
 wire            mir_write_en;            
-wire            mmu_cp0_cmplt;           
-wire    [63:0]  mmu_cp0_satp_data;       
-wire            mmu_lsu_mmu_en;          
+//wire            mmu_cp0_cmplt;           
+//wire    [63:0]  mmu_cp0_satp_data;       
+//wire            mmu_lsu_mmu_en;          
 wire            mmu_regs_clk;            
 wire            mmu_regs_clk_en;         
-wire            mmu_xx_mmu_en;           
-wire            pad_yy_icg_scan_en;      
-wire    [15:0]  regs_jtlb_cur_asid;      
-wire    [13:0]  regs_jtlb_cur_flg;       
-wire            regs_jtlb_cur_g;         
-wire    [27:0]  regs_jtlb_cur_ppn;       
-wire            regs_mmu_en;             
-wire    [15:0]  regs_ptw_cur_asid;       
-wire    [27:0]  regs_ptw_satp_ppn;       
-wire    [15:0]  regs_tlboper_cur_asid;   
-wire    [2 :0]  regs_tlboper_cur_pgs;    
-wire    [26:0]  regs_tlboper_cur_vpn;    
-wire    [15:0]  regs_tlboper_inv_asid;   
-wire            regs_tlboper_invall;     
-wire            regs_tlboper_invasid;    
-wire    [11:0]  regs_tlboper_mir;        
-wire            regs_tlboper_tlbp;       
-wire            regs_tlboper_tlbr;       
-wire            regs_tlboper_tlbwi;      
-wire            regs_tlboper_tlbwr;      
-wire            regs_utlb_clr;           
-wire    [26:0]  rtu_mmu_bad_vpn;         
-wire            rtu_mmu_expt_vld;        
+//wire            mmu_xx_mmu_en;           
+//wire            pad_yy_icg_scan_en;      
+//wire    [15:0]  regs_jtlb_cur_asid;      
+//wire    [13:0]  regs_jtlb_cur_flg;       
+//wire            regs_jtlb_cur_g;         
+//wire    [27:0]  regs_jtlb_cur_ppn;       
+//wire            regs_mmu_en;             
+//wire    [15:0]  regs_ptw_cur_asid;       
+//wire    [27:0]  regs_ptw_satp_ppn;       
+//wire    [15:0]  regs_tlboper_cur_asid;   
+//wire    [2 :0]  regs_tlboper_cur_pgs;    
+//wire    [26:0]  regs_tlboper_cur_vpn;    
+//wire    [15:0]  regs_tlboper_inv_asid;   
+//wire            regs_tlboper_invall;     
+//wire            regs_tlboper_invasid;    
+//wire    [11:0]  regs_tlboper_mir;        
+//wire            regs_tlboper_tlbp;       
+//wire            regs_tlboper_tlbr;       
+//wire            regs_tlboper_tlbwi;      
+//wire            regs_tlboper_tlbwr;      
+//wire            regs_utlb_clr;           
+//wire    [26:0]  rtu_mmu_bad_vpn;         
+//wire            rtu_mmu_expt_vld;        
 wire    [63:0]  satp_data;               
 wire            satp_write_en;           
-wire            tlboper_regs_cmplt;      
-wire            tlboper_regs_tlbp_cmplt; 
-wire            tlboper_regs_tlbr_cmplt; 
+//wire            tlboper_regs_cmplt;      
+//wire            tlboper_regs_tlbp_cmplt; 
+//wire            tlboper_regs_tlbr_cmplt; 
 wire            wdata_invall;            
 wire            wdata_invasid;           
 wire            wdata_tlbp;              
@@ -307,7 +254,7 @@ assign satp_write_en  =  cp0_mmu_satp_sel;
 //  tlbp_tfatal --> 1'b0: none tlb probe tfatal exception
 //              --> 1'b1: tlb probe tfatal exception occurs
 
-always @(posedge mmu_regs_clk or negedge cpurst_b)
+always_ff @(posedge mmu_regs_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
   begin
@@ -321,7 +268,7 @@ begin
   end
 end
   
-always @(posedge mmu_regs_clk or negedge cpurst_b)
+always_ff @(posedge mmu_regs_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
   begin
@@ -382,7 +329,7 @@ assign mir_data[63:0] = {32'b0, mir_probe, mir_tlbp_tfatal, 18'b0, mir_index[11:
 //          1'b0: the current page is not readable
 //    V --> 1'b1: the current page is valid
 //          1'b0: the current page is invalid
-always @(posedge mmu_regs_clk or negedge cpurst_b)
+always_ff @(posedge mmu_regs_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
   begin
@@ -455,7 +402,7 @@ assign mel_data[63:0] = {mel_so,mel_c,mel_b,mel_sh,mel_sec,21'b0,
 //  +------------------------+--------+-------------------+
 //  |  Reserved |    VPN     |PageSize|        ASID       |
 //  =======================================================
-always @(posedge mmu_regs_clk or negedge cpurst_b)
+always_ff @(posedge mmu_regs_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
   begin
@@ -519,7 +466,7 @@ assign wdata_tlbr    = !cp0_mmu_wdata[26] && !cp0_mmu_wdata[27] && cp0_mmu_cskye
                      &&!cp0_mmu_wdata[31] && !cp0_mmu_wdata[29] 
                      &&!cp0_mmu_wdata[28] &&  cp0_mmu_wdata[30];
 
-always @(posedge mmu_regs_clk or negedge cpurst_b)
+always_ff @(posedge mmu_regs_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     mcir_invall <= 1'b0;
@@ -529,7 +476,7 @@ begin
     mcir_invall <= 1'b0;
 end
 
-always @(posedge mmu_regs_clk or negedge cpurst_b)
+always_ff @(posedge mmu_regs_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     mcir_invasid <= 1'b0;
@@ -539,7 +486,7 @@ begin
     mcir_invasid <= 1'b0;
 end
 
-//always @(posedge mmu_regs_clk or negedge cpurst_b)
+//always_ff @(posedge mmu_regs_clk or negedge cpurst_b)
 //begin
 //  if(!cpurst_b)
 //    mcir_invidx <= 1'b0;
@@ -549,7 +496,7 @@ end
 //    mcir_invidx <= 1'b0;
 //end
 
-always @(posedge mmu_regs_clk or negedge cpurst_b)
+always_ff @(posedge mmu_regs_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     mcir_tlbp <= 1'b0;
@@ -559,7 +506,7 @@ begin
     mcir_tlbp <= 1'b0;
 end
 
-always @(posedge mmu_regs_clk or negedge cpurst_b)
+always_ff @(posedge mmu_regs_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     mcir_tlbwi <= 1'b0;
@@ -569,7 +516,7 @@ begin
     mcir_tlbwi <= 1'b0;
 end
 
-always @(posedge mmu_regs_clk or negedge cpurst_b)
+always_ff @(posedge mmu_regs_clk or negedge cpurst_b)
 begin
   if(!cpurst_b) 
     mcir_tlbwr <= 1'b0;
@@ -579,7 +526,7 @@ begin
     mcir_tlbwr <= 1'b0;
 end
 
-always @(posedge mmu_regs_clk or negedge cpurst_b)
+always_ff @(posedge mmu_regs_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     mcir_tlbr <= 1'b0;
@@ -590,7 +537,7 @@ begin
 end
  
 // The recycled ASID field is updated for TLBINV instruction
-always @(posedge mmu_regs_clk or negedge cpurst_b)
+always_ff @(posedge mmu_regs_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
   begin
@@ -608,7 +555,7 @@ assign mcir_data[63:0] = {32'b0, mcir_tlbp, mcir_tlbr, mcir_tlbwi,
 
 assign mcir_data_no_op = (cp0_mmu_wdata[31:26] == 6'b0);
 
-always @(posedge mmu_regs_clk or negedge cpurst_b)
+always_ff @(posedge mmu_regs_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     mcir_no_op <= 1'b0;
@@ -627,7 +574,7 @@ end
 //  +------+------------+---------------------------------+
 //  | Mode |    ASID    |  Reserved  |         PPN        |
 //  =======================================================
-always @(posedge mmu_regs_clk or negedge cpurst_b)
+always_ff @(posedge mmu_regs_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     satp_mode[3:0]            <= {4{1'b0}};
@@ -635,7 +582,7 @@ begin
     satp_mode[3:0]            <= {cp0_mmu_wdata[63],3'b0};
 end
 
-always @(posedge mmu_regs_clk or negedge cpurst_b)
+always_ff @(posedge mmu_regs_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
   begin
@@ -662,11 +609,7 @@ assign mmu_cp0_cmplt = tlboper_regs_cmplt || mcir_no_op;
 // Provide MMU register read data bus to CP15 module 
 //--------------------------------------
 // &CombBeg; @453
-always @( mcir_data[63:0]
-       or mel_data[63:0]
-       or meh_data[63:0]
-       or mir_data[63:0]
-       or cp0_mmu_reg_num[1:0])
+always_comb
 begin
   case(cp0_mmu_reg_num[1:0])
   MIR_NUM   : mmu_cp0_data[63:0] = mir_data[63:0];

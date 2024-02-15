@@ -15,47 +15,27 @@ limitations under the License.
 
 // &ModuleBeg; @24
 module ct_mmu_dutlb_huge_entry(
-  cp0_mmu_icg_en,
-  cpurst_b,
-  lsu_mmu_tlb_va,
-  pad_yy_icg_scan_en,
-  regs_utlb_clr,
-  tlboper_utlb_clr,
-  tlboper_utlb_inv_va_req,
-  utlb_clk,
-  utlb_entry_flg,
-  utlb_entry_hit0,
-  utlb_entry_hit1,
-  utlb_entry_ppn,
-  utlb_entry_upd,
-  utlb_entry_vld,
-  utlb_req_vpn0,
-  utlb_req_vpn1,
-  utlb_upd_flg,
-  utlb_upd_ppn,
-  utlb_upd_vpn
+    input    logic           cp0_mmu_icg_en           ,       
+    input    logic           cpurst_b                 ,       
+    input    logic   [26:0]  lsu_mmu_tlb_va           ,       
+    input    logic           pad_yy_icg_scan_en       ,       
+    input    logic           regs_utlb_clr            ,       
+    input    logic           tlboper_utlb_clr         ,      
+    input    logic           tlboper_utlb_inv_va_req  , 
+    input    logic           utlb_clk                 , 
+    input    logic           utlb_entry_upd           , 
+    input    logic   [26:0]  utlb_req_vpn0            , 
+    input    logic   [26:0]  utlb_req_vpn1            , 
+    input    logic   [13:0]  utlb_upd_flg             , 
+    input    logic   [27:0]  utlb_upd_ppn             , 
+    input    logic   [26:0]  utlb_upd_vpn             , 
+    output   logic   [13:0]  utlb_entry_flg           , 
+    output   logic           utlb_entry_hit0          , 
+    output   logic           utlb_entry_hit1          , 
+    output   logic   [27:0]  utlb_entry_ppn           , 
+    output   logic                utlb_entry_vld  
 );
 
-// &Ports; @25
-input           cp0_mmu_icg_en;         
-input           cpurst_b;               
-input   [26:0]  lsu_mmu_tlb_va;         
-input           pad_yy_icg_scan_en;     
-input           regs_utlb_clr;          
-input           tlboper_utlb_clr;       
-input           tlboper_utlb_inv_va_req; 
-input           utlb_clk;               
-input           utlb_entry_upd;         
-input   [26:0]  utlb_req_vpn0;          
-input   [26:0]  utlb_req_vpn1;          
-input   [13:0]  utlb_upd_flg;           
-input   [27:0]  utlb_upd_ppn;           
-input   [26:0]  utlb_upd_vpn;           
-output  [13:0]  utlb_entry_flg;         
-output          utlb_entry_hit0;        
-output          utlb_entry_hit1;        
-output  [27:0]  utlb_entry_ppn;         
-output          utlb_entry_vld;         
 
 // &Regs; @26
 reg     [13:0]  utlb_flg;               
@@ -64,32 +44,32 @@ reg             utlb_vld;
 reg     [26:0]  utlb_vpn;               
 
 // &Wires; @27
-wire            cp0_mmu_icg_en;         
-wire            cpurst_b;               
+//wire            cp0_mmu_icg_en;         
+//wire            cpurst_b;               
 wire            ctc_inv_va_hit_clr;     
 wire            entry_clk_en;           
-wire    [26:0]  lsu_mmu_tlb_va;         
-wire            pad_yy_icg_scan_en;     
-wire            regs_utlb_clr;          
-wire            tlboper_utlb_clr;       
-wire            tlboper_utlb_inv_va_req; 
-wire            utlb_clk;               
+//wire    [26:0]  lsu_mmu_tlb_va;         
+//wire            pad_yy_icg_scan_en;     
+//wire            regs_utlb_clr;          
+//wire            tlboper_utlb_clr;       
+//wire            tlboper_utlb_inv_va_req; 
+//wire            utlb_clk;               
 wire            utlb_entry_clk;         
 wire            utlb_entry_clr;         
-wire    [13:0]  utlb_entry_flg;         
+//wire    [13:0]  utlb_entry_flg;         
 wire            utlb_entry_gating_clr;  
-wire            utlb_entry_hit0;        
-wire            utlb_entry_hit1;        
-wire    [27:0]  utlb_entry_ppn;         
-wire            utlb_entry_upd;         
-wire            utlb_entry_vld;         
+//wire            utlb_entry_hit0;        
+//wire            utlb_entry_hit1;        
+//wire    [27:0]  utlb_entry_ppn;         
+//wire            utlb_entry_upd;         
+//wire            utlb_entry_vld;         
 wire            utlb_hit0;              
 wire            utlb_hit1;              
-wire    [26:0]  utlb_req_vpn0;          
-wire    [26:0]  utlb_req_vpn1;          
-wire    [13:0]  utlb_upd_flg;           
-wire    [27:0]  utlb_upd_ppn;           
-wire    [26:0]  utlb_upd_vpn;           
+//wire    [26:0]  utlb_req_vpn0;          
+//wire    [26:0]  utlb_req_vpn1;          
+//wire    [13:0]  utlb_upd_flg;           
+//wire    [27:0]  utlb_upd_ppn;           
+//wire    [26:0]  utlb_upd_vpn;           
 
 // &Force("bus","lsu_mmu_tlb_va",26,0); @28
 
@@ -149,7 +129,7 @@ assign utlb_entry_gating_clr = regs_utlb_clr
 assign ctc_inv_va_hit_clr = tlboper_utlb_inv_va_req
                      && (lsu_mmu_tlb_va[7:0] == utlb_vpn[7:0]);
 
-always @(posedge utlb_entry_clk or negedge cpurst_b)
+always_ff @(posedge utlb_entry_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     utlb_vld <= 1'b0;
@@ -162,7 +142,7 @@ end
 //------------------------------------------------------------
 //                  VPN Information
 //------------------------------------------------------------
-always @(posedge utlb_entry_clk or negedge cpurst_b)
+always_ff @(posedge utlb_entry_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
     utlb_vpn[VPN_WIDTH-1:0] <= {VPN_WIDTH{1'b0}};
@@ -173,7 +153,7 @@ end
 //------------------------------------------------------------
 //                  PFN and Flag information
 //------------------------------------------------------------
-always @(posedge utlb_entry_clk or negedge cpurst_b)
+always_ff @(posedge utlb_entry_clk or negedge cpurst_b)
 begin
   if(!cpurst_b)
   begin

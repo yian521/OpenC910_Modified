@@ -15,18 +15,16 @@ limitations under the License.
 
 // &ModuleBeg; @28
 module ct_mmu_sysmap(
-  mmu_sysmap_pa_y,
-  sysmap_mmu_flg_y,
-  sysmap_mmu_hit_y
+input  logic [27:0]  mmu_sysmap_pa_y, 
+output logic [4 :0]  sysmap_mmu_flg_y, 
+output logic [7 :0]  sysmap_mmu_hit_y 
 );
 
 // &Ports; @29
-input   [27:0]  mmu_sysmap_pa_y; 
-output  [4 :0]  sysmap_mmu_flg_y; 
-output  [7 :0]  sysmap_mmu_hit_y; 
+
 
 // &Regs; @30
-reg     [4 :0]  sysmap_mmu_flg_y; 
+//reg     [4 :0]  sysmap_mmu_flg_y; 
 
 // &Wires; @31
 wire            addr_ge_bottom0; 
@@ -45,7 +43,7 @@ wire            addr_ge_upaddr4;
 wire            addr_ge_upaddr5; 
 wire            addr_ge_upaddr6; 
 wire            addr_ge_upaddr7; 
-wire    [27:0]  mmu_sysmap_pa_y; 
+//wire    [27:0]  mmu_sysmap_pa_y; 
 wire            sysmap_comp_hit0; 
 wire            sysmap_comp_hit1; 
 wire            sysmap_comp_hit2; 
@@ -63,10 +61,10 @@ wire            sysmap_mmu_hit4;
 wire            sysmap_mmu_hit5; 
 wire            sysmap_mmu_hit6; 
 wire            sysmap_mmu_hit7; 
-wire    [7 :0]  sysmap_mmu_hit_y; 
+//wire    [7 :0]  sysmap_mmu_hit_y; 
 
 
-parameter ADDR_WIDTH = `PA_WIDTH-12;
+parameter ADDR_WIDTH = 40-12;
 parameter FLG_WIDTH  = 5;
 
 // compare hit
@@ -167,9 +165,9 @@ assign sysmap_hit[7:0] = {sysmap_mmu_hit7, sysmap_mmu_hit6,
                           sysmap_mmu_hit1, sysmap_mmu_hit0}; 
 
 // &CombBeg; @77
-always @( sysmap_hit[7:0])
+always_comb
 begin
-  casez(sysmap_hit[7:0])
+  case(sysmap_hit[7:0])inside
     8'b00000001  : sysmap_mmu_flg_y[FLG_WIDTH-1:0] = `SYSMAP_FLG0;
     8'b00000010  : sysmap_mmu_flg_y[FLG_WIDTH-1:0] = `SYSMAP_FLG1;
     8'b00000100  : sysmap_mmu_flg_y[FLG_WIDTH-1:0] = `SYSMAP_FLG2;

@@ -13,26 +13,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 module ct_mmu_sysmap_hit(
-  addr_ge_bottom_x,
-  addr_ge_upaddr_x,
-  sysmap_comp_hit_x,
-  sysmap_mmu_hit_x
+    input    logic    addr_ge_bottom_x,
+    input    logic    sysmap_comp_hit_x, 
+    output   logic    addr_ge_upaddr_x, 
+    output   logic    sysmap_mmu_hit_x 
 );
 
-// &Ports; @27
-input        addr_ge_bottom_x; 
-input        sysmap_comp_hit_x; 
-output       addr_ge_upaddr_x; 
-output       sysmap_mmu_hit_x; 
-
-// &Regs; @28
-
 // &Wires; @29
-wire         addr_ge_bottom_x; 
-wire         addr_ge_upaddr_x; 
+//wire         addr_ge_bottom_x; 
+//wire         addr_ge_upaddr_x; 
 wire         addr_ls_top;      
-wire         sysmap_comp_hit_x; 
-wire         sysmap_mmu_hit_x; 
+//wire         sysmap_comp_hit_x; 
+//wire         sysmap_mmu_hit_x; 
 
 
 

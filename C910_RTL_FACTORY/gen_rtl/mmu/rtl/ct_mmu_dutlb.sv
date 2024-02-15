@@ -15,176 +15,92 @@ limitations under the License.
 
 // &ModuleBeg; @29
 module ct_mmu_dutlb(
-  arb_dutlb_grant,
-  biu_mmu_smp_disable,
-  cp0_mmu_icg_en,
-  cp0_mmu_mpp,
-  cp0_mmu_mprv,
-  cp0_mmu_mxr,
-  cp0_mmu_sum,
-  cp0_yy_priv_mode,
-  cpurst_b,
-  dutlb_arb_cmplt,
-  dutlb_arb_load,
-  dutlb_arb_req,
-  dutlb_arb_vpn,
-  dutlb_ptw_wfc,
-  dutlb_top_ref_cur_st,
-  dutlb_top_ref_type,
-  dutlb_top_scd_updt,
-  dutlb_xx_mmu_off,
-  forever_cpuclk,
-  hpcp_mmu_cnt_en,
-  jtlb_dutlb_acc_err,
-  jtlb_dutlb_pgflt,
-  jtlb_dutlb_ref_cmplt,
-  jtlb_dutlb_ref_pavld,
-  jtlb_utlb_ref_flg,
-  jtlb_utlb_ref_pgs,
-  jtlb_utlb_ref_ppn,
-  jtlb_utlb_ref_vpn,
-  lsu_mmu_abort0,
-  lsu_mmu_abort1,
-  lsu_mmu_id0,
-  lsu_mmu_id1,
-  lsu_mmu_st_inst0,
-  lsu_mmu_st_inst1,
-  lsu_mmu_stamo_pa,
-  lsu_mmu_stamo_vld,
-  lsu_mmu_tlb_va,
-  lsu_mmu_va0,
-  lsu_mmu_va0_vld,
-  lsu_mmu_va1,
-  lsu_mmu_va1_vld,
-  lsu_mmu_vabuf0,
-  lsu_mmu_vabuf1,
-  mmu_hpcp_dutlb_miss,
-  mmu_lsu_access_fault0,
-  mmu_lsu_access_fault1,
-  mmu_lsu_buf0,
-  mmu_lsu_buf1,
-  mmu_lsu_ca0,
-  mmu_lsu_ca1,
-  mmu_lsu_pa0,
-  mmu_lsu_pa0_vld,
-  mmu_lsu_pa1,
-  mmu_lsu_pa1_vld,
-  mmu_lsu_page_fault0,
-  mmu_lsu_page_fault1,
-  mmu_lsu_sec0,
-  mmu_lsu_sec1,
-  mmu_lsu_sh0,
-  mmu_lsu_sh1,
-  mmu_lsu_so0,
-  mmu_lsu_so1,
-  mmu_lsu_stall0,
-  mmu_lsu_stall1,
-  mmu_lsu_tlb_busy,
-  mmu_lsu_tlb_wakeup,
-  mmu_pmp_pa0,
-  mmu_pmp_pa1,
-  mmu_sysmap_pa0,
-  mmu_sysmap_pa1,
-  pad_yy_icg_scan_en,
-  pmp_mmu_flg0,
-  pmp_mmu_flg1,
-  regs_mmu_en,
-  regs_utlb_clr,
-  rtu_yy_xx_flush,
-  sysmap_mmu_flg0,
-  sysmap_mmu_flg1,
-  tlboper_utlb_clr,
-  tlboper_utlb_inv_va_req,
-  utlb_clk
+input  logic           arb_dutlb_grant,                
+input  logic           biu_mmu_smp_disable,     
+input  logic           cp0_mmu_icg_en,          
+input  logic   [1 :0]  cp0_mmu_mpp,             
+input  logic           cp0_mmu_mprv,            
+input  logic           cp0_mmu_mxr,             
+input  logic           cp0_mmu_sum,             
+input  logic   [1 :0]  cp0_yy_priv_mode,        
+input  logic           cpurst_b,                
+input  logic           forever_cpuclk,          
+input  logic           hpcp_mmu_cnt_en,         
+input  logic           jtlb_dutlb_acc_err,      
+input  logic           jtlb_dutlb_pgflt,        
+input  logic           jtlb_dutlb_ref_cmplt,    
+input  logic           jtlb_dutlb_ref_pavld,    
+input  logic   [13:0]  jtlb_utlb_ref_flg,       
+input  logic   [2 :0]  jtlb_utlb_ref_pgs,       
+input  logic   [27:0]  jtlb_utlb_ref_ppn,       
+input  logic   [26:0]  jtlb_utlb_ref_vpn,       
+input  logic           lsu_mmu_abort0,          
+input  logic           lsu_mmu_abort1,          
+input  logic   [6 :0]  lsu_mmu_id0,             
+input  logic   [6 :0]  lsu_mmu_id1,             
+input  logic           lsu_mmu_st_inst0,        
+input  logic           lsu_mmu_st_inst1,        
+input  logic   [27:0]  lsu_mmu_stamo_pa,        
+input  logic           lsu_mmu_stamo_vld,       
+input  logic   [26:0]  lsu_mmu_tlb_va,          
+input  logic   [63:0]  lsu_mmu_va0,             
+input  logic           lsu_mmu_va0_vld,         
+input  logic   [63:0]  lsu_mmu_va1,             
+input  logic           lsu_mmu_va1_vld,         
+input  logic   [27:0]  lsu_mmu_vabuf0,          
+input  logic   [27:0]  lsu_mmu_vabuf1,          
+input  logic           pad_yy_icg_scan_en,      
+input  logic   [3 :0]  pmp_mmu_flg0,            
+input  logic   [3 :0]  pmp_mmu_flg1,            
+input  logic           regs_mmu_en,             
+input  logic           regs_utlb_clr,           
+input  logic           rtu_yy_xx_flush,         
+input  logic   [4 :0]  sysmap_mmu_flg0,         
+input  logic   [4 :0]  sysmap_mmu_flg1,         
+input  logic           tlboper_utlb_clr,        
+input  logic           tlboper_utlb_inv_va_req, 
+input  logic           utlb_clk,                
+output logic           dutlb_arb_cmplt,         
+output logic           dutlb_arb_load,          
+output logic           dutlb_arb_req,           
+output logic   [26:0]  dutlb_arb_vpn,           
+output logic           dutlb_ptw_wfc,           
+output logic   [2 :0]  dutlb_top_ref_cur_st,    
+output logic           dutlb_top_ref_type,      
+output logic           dutlb_top_scd_updt,      
+output logic           dutlb_xx_mmu_off,        
+output logic           mmu_hpcp_dutlb_miss,     
+output logic           mmu_lsu_access_fault0,   
+output logic           mmu_lsu_access_fault1,   
+output logic           mmu_lsu_buf0,            
+output logic           mmu_lsu_buf1,            
+output logic           mmu_lsu_ca0,             
+output logic           mmu_lsu_ca1,             
+output logic   [27:0]  mmu_lsu_pa0,             
+output logic           mmu_lsu_pa0_vld,         
+output logic   [27:0]  mmu_lsu_pa1,             
+output logic           mmu_lsu_pa1_vld,         
+output logic           mmu_lsu_page_fault0,     
+output logic           mmu_lsu_page_fault1,     
+output logic           mmu_lsu_sec0,            
+output logic           mmu_lsu_sec1,            
+output logic           mmu_lsu_sh0,             
+output logic           mmu_lsu_sh1,             
+output logic           mmu_lsu_so0,             
+output logic           mmu_lsu_so1,             
+output logic           mmu_lsu_stall0,          
+output logic           mmu_lsu_stall1,          
+output logic           mmu_lsu_tlb_busy,        
+output logic   [11:0]  mmu_lsu_tlb_wakeup,      
+output logic   [27:0]  mmu_pmp_pa0,             
+output logic   [27:0]  mmu_pmp_pa1,             
+output logic   [27:0]  mmu_sysmap_pa0,          
+output logic   [27:0]  mmu_sysmap_pa1         
 );
-
-// &Ports; @30
-input           arb_dutlb_grant;         
-input           biu_mmu_smp_disable;     
-input           cp0_mmu_icg_en;          
-input   [1 :0]  cp0_mmu_mpp;             
-input           cp0_mmu_mprv;            
-input           cp0_mmu_mxr;             
-input           cp0_mmu_sum;             
-input   [1 :0]  cp0_yy_priv_mode;        
-input           cpurst_b;                
-input           forever_cpuclk;          
-input           hpcp_mmu_cnt_en;         
-input           jtlb_dutlb_acc_err;      
-input           jtlb_dutlb_pgflt;        
-input           jtlb_dutlb_ref_cmplt;    
-input           jtlb_dutlb_ref_pavld;    
-input   [13:0]  jtlb_utlb_ref_flg;       
-input   [2 :0]  jtlb_utlb_ref_pgs;       
-input   [27:0]  jtlb_utlb_ref_ppn;       
-input   [26:0]  jtlb_utlb_ref_vpn;       
-input           lsu_mmu_abort0;          
-input           lsu_mmu_abort1;          
-input   [6 :0]  lsu_mmu_id0;             
-input   [6 :0]  lsu_mmu_id1;             
-input           lsu_mmu_st_inst0;        
-input           lsu_mmu_st_inst1;        
-input   [27:0]  lsu_mmu_stamo_pa;        
-input           lsu_mmu_stamo_vld;       
-input   [26:0]  lsu_mmu_tlb_va;          
-input   [63:0]  lsu_mmu_va0;             
-input           lsu_mmu_va0_vld;         
-input   [63:0]  lsu_mmu_va1;             
-input           lsu_mmu_va1_vld;         
-input   [27:0]  lsu_mmu_vabuf0;          
-input   [27:0]  lsu_mmu_vabuf1;          
-input           pad_yy_icg_scan_en;      
-input   [3 :0]  pmp_mmu_flg0;            
-input   [3 :0]  pmp_mmu_flg1;            
-input           regs_mmu_en;             
-input           regs_utlb_clr;           
-input           rtu_yy_xx_flush;         
-input   [4 :0]  sysmap_mmu_flg0;         
-input   [4 :0]  sysmap_mmu_flg1;         
-input           tlboper_utlb_clr;        
-input           tlboper_utlb_inv_va_req; 
-input           utlb_clk;                
-output          dutlb_arb_cmplt;         
-output          dutlb_arb_load;          
-output          dutlb_arb_req;           
-output  [26:0]  dutlb_arb_vpn;           
-output          dutlb_ptw_wfc;           
-output  [2 :0]  dutlb_top_ref_cur_st;    
-output          dutlb_top_ref_type;      
-output          dutlb_top_scd_updt;      
-output          dutlb_xx_mmu_off;        
-output          mmu_hpcp_dutlb_miss;     
-output          mmu_lsu_access_fault0;   
-output          mmu_lsu_access_fault1;   
-output          mmu_lsu_buf0;            
-output          mmu_lsu_buf1;            
-output          mmu_lsu_ca0;             
-output          mmu_lsu_ca1;             
-output  [27:0]  mmu_lsu_pa0;             
-output          mmu_lsu_pa0_vld;         
-output  [27:0]  mmu_lsu_pa1;             
-output          mmu_lsu_pa1_vld;         
-output          mmu_lsu_page_fault0;     
-output          mmu_lsu_page_fault1;     
-output          mmu_lsu_sec0;            
-output          mmu_lsu_sec1;            
-output          mmu_lsu_sh0;             
-output          mmu_lsu_sh1;             
-output          mmu_lsu_so0;             
-output          mmu_lsu_so1;             
-output          mmu_lsu_stall0;          
-output          mmu_lsu_stall1;          
-output          mmu_lsu_tlb_busy;        
-output  [11:0]  mmu_lsu_tlb_wakeup;      
-output  [27:0]  mmu_pmp_pa0;             
-output  [27:0]  mmu_pmp_pa1;             
-output  [27:0]  mmu_sysmap_pa0;          
-output  [27:0]  mmu_sysmap_pa1;          
-
 // &Regs; @31
 reg             dutlb_miss;              
-reg     [2 :0]  ref_cur_st;              
-reg     [2 :0]  ref_nxt_st;              
+//reg     [2 :0]  ref_cur_st;              
+//reg     [2 :0]  ref_nxt_st;              
 reg     [6 :0]  refill_id_flop0;         
 reg     [6 :0]  refill_id_flop1;         
 reg             refill_read;             
@@ -193,27 +109,27 @@ reg     [26:0]  refill_va_flop0;
 reg     [26:0]  refill_va_flop1;         
 
 // &Wires; @32
-wire            arb_dutlb_grant;         
-wire            biu_mmu_smp_disable;     
+//wire            arb_dutlb_grant;         
+//wire            biu_mmu_smp_disable;     
 wire            cp0_mach_mode;           
-wire            cp0_mmu_icg_en;          
-wire    [1 :0]  cp0_mmu_mpp;             
-wire            cp0_mmu_mprv;            
-wire            cp0_mmu_mxr;             
-wire            cp0_mmu_sum;             
+//wire            cp0_mmu_icg_en;          
+//wire    [1 :0]  cp0_mmu_mpp;             
+//wire            cp0_mmu_mprv;            
+//wire            cp0_mmu_mxr;             
+//wire            cp0_mmu_sum;             
 wire    [1 :0]  cp0_priv_mode;           
 wire            cp0_supv_mode;           
 wire            cp0_user_mode;           
-wire    [1 :0]  cp0_yy_priv_mode;        
-wire            cpurst_b;                
+//wire    [1 :0]  cp0_yy_priv_mode;        
+//wire            cpurst_b;                
 wire            dplru_clk;               
 wire            dplru_clk_en;            
 wire            dutlb_acc_flt0;          
 wire            dutlb_acc_flt1;          
-wire            dutlb_arb_cmplt;         
-wire            dutlb_arb_load;          
-wire            dutlb_arb_req;           
-wire    [26:0]  dutlb_arb_vpn;           
+//wire            dutlb_arb_cmplt;         
+//wire            dutlb_arb_load;          
+//wire            dutlb_arb_req;           
+//wire    [26:0]  dutlb_arb_vpn;           
 wire            dutlb_clk;               
 wire            dutlb_clk_en;            
 wire            dutlb_expt_for_taken;    
@@ -238,7 +154,7 @@ wire            dutlb_plru_read_hit_vld0;
 wire            dutlb_plru_read_hit_vld1; 
 wire            dutlb_plru_refill_on;    
 wire            dutlb_plru_refill_vld;   
-wire            dutlb_ptw_wfc;           
+//wire            dutlb_ptw_wfc;           
 wire            dutlb_read_type0;        
 wire            dutlb_read_type1;        
 wire            dutlb_ref_acflt;         
@@ -251,13 +167,13 @@ wire            dutlb_refill_upd0;
 wire            dutlb_refill_upd1;       
 wire            dutlb_refill_vld;        
 wire            dutlb_req_id0_older;     
-wire    [2 :0]  dutlb_top_ref_cur_st;    
-wire            dutlb_top_ref_type;      
-wire            dutlb_top_scd_updt;      
+//wire    [2 :0]  dutlb_top_ref_cur_st;    
+//wire            dutlb_top_ref_type;      
+//wire            dutlb_top_scd_updt;      
 wire            dutlb_va_chg0;           
 wire            dutlb_va_chg1;           
 wire            dutlb_wfc;               
-wire            dutlb_xx_mmu_off;        
+//wire            dutlb_xx_mmu_off;        
 wire    [13:0]  entry0_flg;              
 wire            entry0_hit0;             
 wire            entry0_hit1;             
@@ -359,79 +275,79 @@ wire            entry9_hit1;
 wire    [27:0]  entry9_ppn;              
 wire            entry9_upd;              
 wire            entry9_vld;              
-wire            forever_cpuclk;          
-wire            hpcp_mmu_cnt_en;         
-wire            jtlb_dutlb_acc_err;      
-wire            jtlb_dutlb_pgflt;        
-wire            jtlb_dutlb_ref_cmplt;    
-wire            jtlb_dutlb_ref_pavld;    
-wire    [13:0]  jtlb_utlb_ref_flg;       
-wire    [2 :0]  jtlb_utlb_ref_pgs;       
-wire    [27:0]  jtlb_utlb_ref_ppn;       
-wire    [26:0]  jtlb_utlb_ref_vpn;       
-wire            lsu_mmu_abort0;          
-wire            lsu_mmu_abort1;          
-wire    [6 :0]  lsu_mmu_id0;             
-wire    [6 :0]  lsu_mmu_id1;             
-wire            lsu_mmu_st_inst0;        
-wire            lsu_mmu_st_inst1;        
-wire    [27:0]  lsu_mmu_stamo_pa;        
+//wire            forever_cpuclk;          
+//wire            hpcp_mmu_cnt_en;         
+//wire            jtlb_dutlb_acc_err;      
+//wire            jtlb_dutlb_pgflt;        
+//wire            jtlb_dutlb_ref_cmplt;    
+//wire            jtlb_dutlb_ref_pavld;    
+//wire    [13:0]  jtlb_utlb_ref_flg;       
+//wire    [2 :0]  jtlb_utlb_ref_pgs;       
+//wire    [27:0]  jtlb_utlb_ref_ppn;       
+//wire    [26:0]  jtlb_utlb_ref_vpn;       
+//wire            lsu_mmu_abort0;          
+//wire            lsu_mmu_abort1;          
+//wire    [6 :0]  lsu_mmu_id0;             
+//wire    [6 :0]  lsu_mmu_id1;             
+//wire            lsu_mmu_st_inst0;        
+//wire            lsu_mmu_st_inst1;        
+//wire    [27:0]  lsu_mmu_stamo_pa;        
 wire    [27:0]  lsu_mmu_stamo_pa0;       
 wire    [27:0]  lsu_mmu_stamo_pa1;       
-wire            lsu_mmu_stamo_vld;       
+//wire            lsu_mmu_stamo_vld;       
 wire            lsu_mmu_stamo_vld0;      
 wire            lsu_mmu_stamo_vld1;      
-wire    [26:0]  lsu_mmu_tlb_va;          
-wire    [63:0]  lsu_mmu_va0;             
-wire            lsu_mmu_va0_vld;         
-wire    [63:0]  lsu_mmu_va1;             
-wire            lsu_mmu_va1_vld;         
+//wire    [26:0]  lsu_mmu_tlb_va;          
+//wire    [63:0]  lsu_mmu_va0;             
+//wire            lsu_mmu_va0_vld;         
+//wire    [63:0]  lsu_mmu_va1;             
+//wire            lsu_mmu_va1_vld;         
 wire            lsu_mmu_va_vld0;         
 wire            lsu_mmu_va_vld1;         
-wire    [27:0]  lsu_mmu_vabuf0;          
-wire    [27:0]  lsu_mmu_vabuf1;          
-wire            mmu_hpcp_dutlb_miss;     
-wire            mmu_lsu_access_fault0;   
-wire            mmu_lsu_access_fault1;   
-wire            mmu_lsu_buf0;            
-wire            mmu_lsu_buf1;            
-wire            mmu_lsu_ca0;             
-wire            mmu_lsu_ca1;             
-wire    [27:0]  mmu_lsu_pa0;             
-wire            mmu_lsu_pa0_vld;         
-wire    [27:0]  mmu_lsu_pa1;             
-wire            mmu_lsu_pa1_vld;         
+//wire    [27:0]  lsu_mmu_vabuf0;          
+//wire    [27:0]  lsu_mmu_vabuf1;          
+//wire            mmu_hpcp_dutlb_miss;     
+//wire            mmu_lsu_access_fault0;   
+//wire            mmu_lsu_access_fault1;   
+//wire            mmu_lsu_buf0;            
+//wire            mmu_lsu_buf1;            
+//wire            mmu_lsu_ca0;             
+//wire            mmu_lsu_ca1;             
+//wire    [27:0]  mmu_lsu_pa0;             
+//wire            mmu_lsu_pa0_vld;         
+//wire    [27:0]  mmu_lsu_pa1;             
+//wire            mmu_lsu_pa1_vld;         
 wire            mmu_lsu_pa_vld0;         
 wire            mmu_lsu_pa_vld1;         
-wire            mmu_lsu_page_fault0;     
-wire            mmu_lsu_page_fault1;     
-wire            mmu_lsu_sec0;            
-wire            mmu_lsu_sec1;            
-wire            mmu_lsu_sh0;             
-wire            mmu_lsu_sh1;             
-wire            mmu_lsu_so0;             
-wire            mmu_lsu_so1;             
-wire            mmu_lsu_stall0;          
-wire            mmu_lsu_stall1;          
-wire            mmu_lsu_tlb_busy;        
-wire    [11:0]  mmu_lsu_tlb_wakeup;      
-wire    [27:0]  mmu_pmp_pa0;             
-wire    [27:0]  mmu_pmp_pa1;             
-wire    [27:0]  mmu_sysmap_pa0;          
-wire    [27:0]  mmu_sysmap_pa1;          
-wire            pad_yy_icg_scan_en;      
+//wire            mmu_lsu_page_fault0;     
+//wire            mmu_lsu_page_fault1;     
+//wire            mmu_lsu_sec0;            
+//wire            mmu_lsu_sec1;            
+//wire            mmu_lsu_sh0;             
+//wire            mmu_lsu_sh1;             
+//wire            mmu_lsu_so0;             
+//wire            mmu_lsu_so1;             
+//wire            mmu_lsu_stall0;          
+//wire            mmu_lsu_stall1;          
+//wire            mmu_lsu_tlb_busy;        
+//wire    [11:0]  mmu_lsu_tlb_wakeup;      
+//wire    [27:0]  mmu_pmp_pa0;             
+//wire    [27:0]  mmu_pmp_pa1;             
+//wire    [27:0]  mmu_sysmap_pa0;          
+//wire    [27:0]  mmu_sysmap_pa1;          
+//wire            pad_yy_icg_scan_en;      
 wire    [15:0]  plru_dutlb_ref_num;      
-wire    [3 :0]  pmp_mmu_flg0;            
-wire    [3 :0]  pmp_mmu_flg1;            
+//wire    [3 :0]  pmp_mmu_flg0;            
+//wire    [3 :0]  pmp_mmu_flg1;            
 wire    [6 :0]  refill_id_flop;          
-wire            regs_mmu_en;             
-wire            regs_utlb_clr;           
-wire            rtu_yy_xx_flush;         
-wire    [4 :0]  sysmap_mmu_flg0;         
-wire    [4 :0]  sysmap_mmu_flg1;         
-wire            tlboper_utlb_clr;        
-wire            tlboper_utlb_inv_va_req; 
-wire            utlb_clk;                
+//wire            regs_mmu_en;             
+//wire            regs_utlb_clr;           
+//wire            rtu_yy_xx_flush;         
+//wire    [4 :0]  sysmap_mmu_flg0;         
+//wire    [4 :0]  sysmap_mmu_flg1;         
+//wire            tlboper_utlb_clr;        
+//wire            tlboper_utlb_inv_va_req; 
+//wire            utlb_clk;                
 wire            utlb_huge_entry_upd;     
 wire    [26:0]  utlb_req_vpn0;           
 wire    [26:0]  utlb_req_vpn1;           
@@ -575,16 +491,20 @@ gated_clk_cell  x_dutlb_plru_gateclk (
 // 1. IDLE: default state; wait grant when utlb miss
 // 2. WFC : wait utlb refill cmplt to refill utlb
 // 3. ABT : wait utlb refill cmplt when abort happened
-parameter IDLE  = 3'b000, 
-          WFG   = 3'b001,
-          WFC   = 3'b011,
-          PGFLT = 3'b010,
-          ACFLT = 3'b100,
-          ABT   = 3'b101;
+
+
+enum logic[2:0] {IDLE  = 3'b000, 
+                 WFG   = 3'b001,
+                 WFC   = 3'b011,
+                 PGFLT = 3'b010,
+                 ACFLT = 3'b100,
+                 ABT   = 3'b101                                             
+                } ref_cur_st,ref_nxt_st;
+
 
 assign dutlb_miss_vld = dutlb_miss_vld0 || dutlb_miss_vld1;
 
-always @(posedge dutlb_clk or negedge cpurst_b)
+always_ff @(posedge dutlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     ref_cur_st[2:0] <= 3'b000;
@@ -593,15 +513,7 @@ begin
 end
 
 // &CombBeg; @136
-always @( ref_cur_st
-       or dutlb_inst_id_older
-       or jtlb_dutlb_acc_err
-       or jtlb_dutlb_pgflt
-       or arb_dutlb_grant
-       or dutlb_miss_vld
-       or jtlb_dutlb_ref_cmplt
-       or rtu_yy_xx_flush
-       or dutlb_inst_id_match)
+always_comb
 begin
 case (ref_cur_st)
 IDLE:
@@ -694,7 +606,7 @@ assign dutlb_arb_vpn[VPN_WIDTH-1:0] = refill_type ? refill_va_flop0[VPN_WIDTH-1:
                                                   : refill_va_flop1[VPN_WIDTH-1:0];
 assign dutlb_arb_load = refill_read;
 
-always @(posedge dutlb_clk or negedge cpurst_b)
+always_ff @(posedge dutlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     refill_va_flop0[VPN_WIDTH-1:0] <= {VPN_WIDTH{1'b0}};
@@ -702,7 +614,7 @@ begin
     refill_va_flop0[VPN_WIDTH-1:0] <= utlb_req_vpn0[VPN_WIDTH-1:0];
 end
 
-always @(posedge dutlb_clk or negedge cpurst_b)
+always_ff @(posedge dutlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     refill_va_flop1[VPN_WIDTH-1:0] <= {VPN_WIDTH{1'b0}};
@@ -721,7 +633,7 @@ ct_rtu_compare_iid  x_mmu_dutlb_compare_req_iid (
 //           .x_iid1         (lsu_mmu_id1[6:0]), @245
 //           .x_iid0_older   (dutlb_req_id0_older)); @246
 
-always @(posedge dutlb_clk or negedge cpurst_b)
+always_ff @(posedge dutlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     refill_type <= 1'b0;
@@ -731,7 +643,7 @@ begin
     refill_type <= 1'b0;
 end
 
-always @(posedge dutlb_clk or negedge cpurst_b)
+always_ff @(posedge dutlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     refill_read <= 1'b0;
@@ -764,14 +676,14 @@ assign dutlb_arb_cmplt    = (ref_cur_st[2:0] == WFG) && rtu_yy_xx_flush
                          || (ref_cur_st[2:0] == WFC) && jtlb_dutlb_ref_cmplt
                          || (ref_cur_st[2:0] == ABT) && jtlb_dutlb_ref_cmplt;
 
-always @(posedge dutlb_clk or negedge cpurst_b)
+always_ff @(posedge dutlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     refill_id_flop0[IID_WIDTH-1:0] <= {IID_WIDTH{1'b0}};
   else if(dutlb_miss_vld_short0 && dutlb_refill_upd0)
     refill_id_flop0[IID_WIDTH-1:0] <= lsu_mmu_id0[IID_WIDTH-1:0];
 end
-always @(posedge dutlb_clk or negedge cpurst_b)
+always_ff @(posedge dutlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     refill_id_flop1[IID_WIDTH-1:0] <= {IID_WIDTH{1'b0}};
@@ -789,7 +701,7 @@ assign dutlb_expt_for_taken = (dutlb_ref_pgflt || dutlb_ref_acflt);
 // for hpcp
 assign dutlb_miss_cnt = dutlb_refill_vld && hpcp_mmu_cnt_en; 
 
-always @(posedge dutlb_clk or negedge cpurst_b)
+always_ff @(posedge dutlb_clk or negedge cpurst_b)
 begin
   if (!cpurst_b)
     dutlb_miss <= 1'b0;
